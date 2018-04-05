@@ -1,5 +1,5 @@
 /*Name: Logan Lawson
- *Lab 1 : Part 3*/
+ *Lab 1 : Part 2*/
 
 #include "part3.h"
 
