@@ -44,6 +44,7 @@ for (int j = 0; j < 256; ++j){
 					curTC = (int)argv[2][c];
 					if (curTC == 92){
 						curTC = escapeHelper((int)argv[1][c+1]);
+						escCFlag = 1;
 					}
 				}
 				if (escCFlag == 1){
