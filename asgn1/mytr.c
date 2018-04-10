@@ -24,8 +24,8 @@ for (int j = 0; j < 256; ++j){
 	for (int i = 1; i < argc; i++)
 	{
 		normal_flag = (!strcmp(argv[1], "-d")) ?	-1 : 1;
-		printf("%s\n", argv[i]);
-		printf("%d\n", normal_flag);
+		//printf("%s\n", argv[i]);
+		//printf("%d\n", normal_flag);
 	}
 
 		//printf("lol\n");
