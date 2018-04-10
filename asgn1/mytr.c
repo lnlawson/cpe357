@@ -10,9 +10,12 @@ int curC;
 int curTC;
 int len1 = strlen(argv[2]);
 
-printf("hiiii\n");
+//printf("hiiii\n");
 
 //initialize arr for translation
+if (argc)
+	fprintf(stderr, "Incorrectly formatted");
+
 for (int j = 0; j < 256; ++j){
 	transarr[j] = j;
 	}
@@ -50,11 +53,11 @@ for (int j = 0; j < 256; ++j){
 	curC = getchar();
 
 	while(curC != EOF){
-		if (transarr[curC] == -1)
+		if (transarr[curC] == -1){
+			curC = getchar();
 			continue;
-
+		}
 		putchar(transarr[curC]);
-		curC = getchar();
 	}
 	return 0;
 }
