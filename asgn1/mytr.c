@@ -33,10 +33,11 @@ for (int j = 0; j < 256; ++j){
 		if (normal_flag == 1){
 			for (int c = 0; (int)argv[1][c] != 0; ++c)
 			{
+				int escCFlag = 0;
 				int curT = (int)argv[1][c];
 				if (curT == 92){
 					curT = escapeHelper((int)argv[1][c+1]);
-					int escCFlag = 1;
+					escCFlag = 1;
 				}
 				
 				if (c < len1){
@@ -47,7 +48,7 @@ for (int j = 0; j < 256; ++j){
 				}
 				if (escCFlag == 1){
 					c++;
-					escCFlag = 0;
+					escCFlag--;
 				}
 				//printf("%c\n", transarr[curT]);
 				transarr[curT] = curTC;
