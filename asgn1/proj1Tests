@@ -1,0 +1,20 @@
+
+Project1 Tests can now be run on the servers. 
+Call the following script from the directory above your project directory as pass the name as an argument.
+
+~getaylor-grader/copy/grade1.sh [Project1Directory]
+
+a "Score" file will be produced in your Project1Directory
+
+Example:
+
+With this dir structure:
+cpe357
+   Proj1
+      Makefile
+      mytr.c
+
+run this from your cpe357 directory:
+~getaylor-grader/copy/grade1.sh Proj1
+
+
