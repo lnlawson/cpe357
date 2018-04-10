@@ -86,7 +86,7 @@ int escapeHelper(int escChar){
 		case 't' :
 			return 9;
 			break;
-		case '\\' :
+		case 92 : // '\'
 			return 92;
 			break;
 	}
