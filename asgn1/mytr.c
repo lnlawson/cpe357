@@ -55,6 +55,9 @@ for (int j = 0; j < 256; ++j){
 			for (int k = 0; (int)argv[2][k] != 0; ++k)
 			{
 				int curT = (int)argv[2][k];
+				if (curT == 92){
+					curT = escapeHelper((int)argv[2][++k])
+				}
 				transarr[curT] = -1;
 			}	
 		}
