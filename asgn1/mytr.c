@@ -34,8 +34,13 @@ for (int j = 0; j < 256; ++j){
 			for (int c = 0; (int)argv[1][c] != 0; ++c)
 			{
 				int curT = (int)argv[1][c];
-				if (c < len1){
-					curTC = (int)argv[2][c];
+				if (curT == 92)
+					curT = escapeHelper((int)argv[1][++c]);
+				
+				if (c-1 < len1){
+					curTC = (int)argv[2][c-1];
+					if (curTC == 92)
+						curTC = escapeHelper((int)argv[1][c]);
 				}
 
 				//printf("%c\n", transarr[curT]);
@@ -61,6 +66,21 @@ for (int j = 0; j < 256; ++j){
 		}
 		putchar(transarr[curC]);
 		curC = getchar();
+	}
+	return 0;
+}
+
+int escapeHelper(int escChar){
+	switch(escChar){
+		case 'n' :
+			return 10;
+			break;
+		case 't' :
+			return 9;
+			break;
+		case '\\' :
+			return 92;
+			break;
 	}
 	return 0;
 }

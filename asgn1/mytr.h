@@ -9,4 +9,6 @@
 
 int transarr[256];
 
+int escapeHelper(int escChar);
+
 #endif
