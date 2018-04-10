@@ -12,20 +12,20 @@ int len1 = strlen(argv[2]);
 
 //printf("hiiii\n");
 
-//initialize arr for translation
 if (argc > 3){
 	fprintf(stderr, "Incorrectly formatted");
 	return 1;
 }
-
+//initialize arr for translation
 for (int j = 0; j < 256; ++j){
 	transarr[j] = j;
 	}
 
 	for (int i = 1; i < argc; i++)
 	{
-		normal_flag = (!strcmp(argv[i], "-d")) ?	-1 : 1;
-		//printf("%s\n", argv[i]);
+		normal_flag = (!strcmp(argv[1], "-d")) ?	-1 : 1;
+		printf("%s\n", argv[i]);
+		printf("%d\n", normal_flag);
 	}
 
 		//printf("lol\n");
@@ -45,9 +45,9 @@ for (int j = 0; j < 256; ++j){
 		}
 
 		else if (normal_flag == -1){
-			for (int c = 0; (int)argv[2][c] != 0; ++c)
+			for (int k = 0; (int)argv[2][k] != 0; ++k)
 			{
-				int curT = (int)argv[2][c];
+				int curT = (int)argv[2][k];
 				transarr[curT] = -1;
 			}	
 		}
@@ -60,6 +60,7 @@ for (int j = 0; j < 256; ++j){
 			continue;
 		}
 		putchar(transarr[curC]);
+		curC = getchar();
 	}
 	return 0;
 }
