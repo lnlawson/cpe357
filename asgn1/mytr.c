@@ -13,8 +13,10 @@ int len1 = strlen(argv[2]);
 //printf("hiiii\n");
 
 //initialize arr for translation
-if (argc)
+if (argc > 3){
 	fprintf(stderr, "Incorrectly formatted");
+	return 1;
+}
 
 for (int j = 0; j < 256; ++j){
 	transarr[j] = j;
