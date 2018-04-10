@@ -31,26 +31,20 @@ for (int j = 0; j < 256; ++j){
 		//printf("lol\n");
 
 		if (normal_flag == 1){
-			for (int c = 0; (int)argv[1][c] != 0; ++c)
+			for (int c = 0, int cc = 0; (int)argv[1][c] != 0; ++c, ++cc)
 			{
-				int escCFlag = 0;
 				int curT = (int)argv[1][c];
 				if (curT == 92){
-					curT = escapeHelper((int)argv[1][c+1]);
-					escCFlag = 1;
+					curT = escapeHelper((int)argv[1][++c]);
 				}
 				
-				if (c < len1){
-					curTC = (int)argv[2][c];
+				if (cc < len1){
+					curTC = (int)argv[2][cc];
 					if (curTC == 92){
-						curTC = escapeHelper((int)argv[2][c+1]);
-						escCFlag = 1;
+						curTC = escapeHelper((int)argv[2][++cc]);
 					}
 				}
-				if (escCFlag == 1){
-					c++;
-					escCFlag = 0;
-				}
+				
 				//printf("%c\n", transarr[curT]);
 				transarr[curT] = curTC;
 				//printf("%c\n", transarr[curT]);
