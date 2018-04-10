@@ -90,5 +90,5 @@ int escapeHelper(int escChar){
 			return 92;
 			break;
 	}
-	return 0;
+	return escChar;
 }
