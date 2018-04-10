@@ -48,7 +48,7 @@ for (int j = 0; j < 256; ++j){
 				}
 				if (escCFlag == 1){
 					c++;
-					escCFlag--;
+					escCFlag = 0;
 				}
 				//printf("%c\n", transarr[curT]);
 				transarr[curT] = curTC;
