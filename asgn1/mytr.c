@@ -8,7 +8,6 @@ int main(int argc, char const *argv[]){
 int normal_flag = 0;
 int curC;
 int curTC;
-int len1 = strlen(argv[2]);
 
 //printf("hiiii\n");
 
@@ -16,13 +15,13 @@ if (argc < 3){
 	fprintf(stderr, "\ntr: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
 	return 1;
 }
-if (argc == 3){
+else if (argc == 3){
 	if (argv[1][0] == '-' && argv[1][1] != 'd'){
 		fprintf(stderr, "\ntr: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
 		return 1;
 	}
 }
-if (argc > 3){
+else if (argc > 3){
 	fprintf(stderr, "\ntr: extra operand '%s'\nTry 'tr --help' for more information.", argv[1]);
 	return 1;
 }
@@ -40,7 +39,8 @@ for (int j = 0; j < 256; ++j){
 	}
 
 		//printf("lol\n");
-
+		int len1 = strlen(argv[2]);
+		
 		if (normal_flag == 1){
 			for (int c = 0, cc = 0; (int)argv[1][c] != 0; ++c, ++cc)
 			{
