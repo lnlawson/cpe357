@@ -13,17 +13,17 @@ int len1 = strlen(argv[2]);
 //printf("hiiii\n");
 
 if (argc < 3){
-	fprintf(stderr, "\ntr: missing operand Try 'tr --help' for more information.");
+	fprintf(stderr, "\ntr: missing operand after %s Two strings must be given when translating. Try 'tr --help' for more information.", argv[1]);
 	return 1;
 }
 else if (argc == 3){
 	if (argv[1][0] == '-' && !(argv[1][1] == 'd')){
-		fprintf(stderr, "\ntr: invalid option -- '%c' Try 'tr --help' for more information.", argv[1][1]);
+		fprintf(stderr, "\ntr: invalid option -- %c Try 'tr --help' for more information.", argv[1][1]);
 		return 1;
 	}
 }
 else if (argc > 3){
-	fprintf(stderr, "\ntr: extra operand ‘%s’ Try 'tr --help' for more information.", argv[1]);
+	fprintf(stderr, "\ntr: extra operand %s Try 'tr --help' for more information.", argv[1]);
 }
 
 //initialize arr for translation
