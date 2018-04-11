@@ -11,9 +11,14 @@ int curTC;
 
 //printf("hiiii\n");
 
-if (argc < 3 || (argc < 3 && argv[1][0] != '-')){
-	fprintf(stderr, "\ntr: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
-	return 1;
+if (argc < 3){
+	if(argv[1][0] != '-'){
+		fprintf(stderr, "\ntr: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
+		return 1;
+	 }
+	 if (argv[1][0] == '-' && argv[1][1] != 'd'){
+		fprintf(stderr, "\ntr: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
+		return 1;
 }
 else if (argc == 3){
 	if (argv[1][0] == '-' && argv[1][1] != 'd'){
