@@ -24,6 +24,7 @@ else if (argc == 3){
 }
 else if (argc > 3){
 	fprintf(stderr, "\ntr: extra operand '%s'\nTry 'tr --help' for more information.", argv[1]);
+	return 1;
 }
 
 //initialize arr for translation
