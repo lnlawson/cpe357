@@ -11,7 +11,7 @@ int curTC;
 
 //printf("hiiii\n");
 
-if (argc < 3){
+if (argc < 3 && argv[1][0] != '-'){
 	fprintf(stderr, "\ntr: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
 	return 1;
 }
@@ -40,7 +40,7 @@ for (int j = 0; j < 256; ++j){
 
 		//printf("lol\n");
 		int len1 = strlen(argv[2]);
-		
+
 		if (normal_flag == 1){
 			for (int c = 0, cc = 0; (int)argv[1][c] != 0; ++c, ++cc)
 			{
