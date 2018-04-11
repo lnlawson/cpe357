@@ -18,7 +18,7 @@ if (argc < 3){
 }
 else if (argc == 3){
 	if (argv[1][0] == '-' && !(argv[1][1] == 'd')){
-		fprintf(stderr, "\ntr: invalid option -- '%s' Try 'tr --help' for more information.", argv[1][1]);
+		fprintf(stderr, "\ntr: invalid option -- '%c' Try 'tr --help' for more information.", argv[1][1]);
 		return 1;
 	}
 }
