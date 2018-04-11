@@ -12,10 +12,20 @@ int len1 = strlen(argv[2]);
 
 //printf("hiiii\n");
 
-if (argc > 3){
-	fprintf(stderr, "Incorrectly formatted");
+if (argc < 3){
+	fprintf(stderr, "\ntr: missing operand Try 'tr --help' for more information.");
 	return 1;
 }
+else if (argc == 3){
+	if (argv[1][0] == '-' && !(argv[1][1] == 'd')){
+		fprintf(stderr, "\ntr: invalid option -- '%s' Try 'tr --help' for more information.", argv[1][1]);
+		return 1;
+	}
+}
+else if (argc > 3){
+	fprintf(stderr, "\ntr: extra operand ‘%s’ Try 'tr --help' for more information.", argv[1]);
+}
+
 //initialize arr for translation
 for (int j = 0; j < 256; ++j){
 	transarr[j] = j;
