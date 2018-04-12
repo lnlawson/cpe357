@@ -40,11 +40,7 @@ for (int j = 0; j < 256; ++j){
 	for (int i = 1; i < argc; i++)
 	{
 		normal_flag = (!strcmp(argv[1], "-d")) ?	-1 : 1;
-		//printf("%s\n", argv[i]);
-		//printf("%d\n", normal_flag);
 	}
-
-		//printf("lol\n");
 		int len1 = strlen(argv[2]);
 
 		if (normal_flag == 1){
@@ -61,10 +57,7 @@ for (int j = 0; j < 256; ++j){
 						curTC = escapeHelper((int)argv[2][++cc]);
 					}
 				}
-				
-				//printf("%c\n", transarr[curT]);
 				transarr[curT] = curTC;
-				//printf("%c\n", transarr[curT]);
 			}
 		}
 
