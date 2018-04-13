@@ -13,22 +13,22 @@ int curTC;
 
 if (argc < 3){
 	if (argv[1][0] == '-' && argv[1][1] != 'd'){
-		fprintf(stderr, "\ntr: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
+		fprintf(stderr, "\nusage: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
 		return 1;
 	}
 	else {
-		fprintf(stderr, "\ntr: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
+		fprintf(stderr, "\nusage: missing operand after '%s'\nTwo strings must be given when translating.\nTry 'tr --help' for more information.", argv[1]);
 		return 1;
 	 }
 }
 else if (argc == 3){
 	if (argv[1][0] == '-' && argv[1][1] != 'd'){
-		fprintf(stderr, "\ntr: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
+		fprintf(stderr, "\nusage: invalid option -- '%s'\nTry 'tr --help' for more information.", &argv[1][1]);
 		return 1;
 	}
 }
 else if (argc > 3){
-	fprintf(stderr, "\ntr: extra operand '%s'\nTry 'tr --help' for more information.", argv[1]);
+	fprintf(stderr, "\nusage: extra operand '%s'\nTry 'tr --help' for more information.", argv[1]);
 	return 1;
 }
 
