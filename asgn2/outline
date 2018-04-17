@@ -1,0 +1,3 @@
+The main data structure of our program will be a hash table that uses a word as the key and the value the key points to an integer that increases with every instance of the word that appears. We’ll keep track of the table size and the actual amount of objects in the table as separate variables. This way we can calculate the load factor. Whenever the load factor exceeds 85% we’ll rehash the table using realloc and double the table size.
+
+Since the program can take input from either a file or stdin we’ll have to have a helper function that runs the actual loop through the characters and and another helper to build and manage the hashtable. This way we can simply use our main function to pass whichever file we’re using to the helper function. 
