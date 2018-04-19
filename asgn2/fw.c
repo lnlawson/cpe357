@@ -72,8 +72,8 @@ void procLine(HashItem **table, char *curline){
 void cyclingHashTable(HashItem **table, int index, char *word){
 	for (int j = 1; table[index] != NULL; ++j){
 		index = quadProbing(index, j);
-		if ( !(strcmp((*(table[index]).word), word)) ) {
-			(*(table[index]).occur) += 1;
+		if ( !(strcmp( (table[index])->word), word) )  {
+			(table[index])->occur += 1;
 			break;
 		}
 		if (table[index] == NULL){
@@ -87,8 +87,8 @@ void cyclingHashTable(HashItem **table, int index, char *word){
 
 void createItem(HashItem **table, int index, char *word){
 	table[index] = malloc(sizeof(HashItem));
-	(*(table[index]).word) = word;
-	(*(table[index]).occur) = 1;
+	(table[index])->word = word;
+	(table[index])->occur = 1;
 	return;
 }
 
