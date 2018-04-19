@@ -99,8 +99,8 @@ int quadProbing(int index, int inc){
 }
 
 int hashCode(char *value){
-	
-	for (int i = 0, asval = 0; *(value + i) != '\0'; ++i, asval += (int)(*(value + i)))
+	int asval = 0;
+	for (int i = 0; *(value + i) != '\0'; ++i, asval += (int)(*(value + i)));
 
 	return asval % size;
 }
