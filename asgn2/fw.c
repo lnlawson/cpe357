@@ -10,7 +10,7 @@ int amount = 0;
 int main(int argc, char const *argv[])
 {
 	FILE *file;
-	HashItem *hashTable = NULL;
+	HashItem **hashTable = NULL;
 	char *curline = NULL;
 
 	int code = NULL;
@@ -28,7 +28,7 @@ int main(int argc, char const *argv[])
 		procLine(hashTable, curline);
 
 	for (int k=0; k<size; ++k){
-		if (hashTable[k] != NULL){
+		if (*(hashTable[k]) != NULL){
 			printf("%s\n", hashTable[k]->word);
 			printf("%d\n", hashTable[k]->occur);
 		}
@@ -55,7 +55,7 @@ void procLine(HashItem *table, char *curline){
 						strcpy(curword, compTok);
 						curword[i+1] = '\0';
 						code = hashCode(curword, size);
-						if (hashTable[code] != NULL){
+						if (*(hashTable[code]) != NULL){
 							cyclingHashTable(hashTable, code, curword, size);
 							compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
 							break;
