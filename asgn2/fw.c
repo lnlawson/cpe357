@@ -13,8 +13,6 @@ int main(int argc, char const *argv[])
 	HashItem **hashTable = NULL;
 	char *curline = NULL;
 
-	int code = NULL;
-
 	if (NULL == (file = fopen(argv[1], "r"))){
 		perror(__FUNCTION__);
 		exit(-1);
@@ -74,7 +72,7 @@ void procLine(HashItem **table, char *curline){
 void cyclingHashTable(HashItem **table, int index, char *word){
 	for (int j = 1; table[index] != NULL; ++j){
 		index = quadProbing(index, j);
-		if ( !(strcmp((table[index])->word, word)) ) {
+		if ( !(strcmp((*(table[index])->word), word)) ) {
 			(*(table[index])->occur) += 1;
 			break;
 		}
