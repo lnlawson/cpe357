@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
 			perror(__FUNCTION__);
 			exit(-1);
 		}
-		procLine(&hashTable, &curline);
+		procLine(hashTable, curline);
 
 	for (int k=0; k<size; ++k){
 		if (hashTable[k] != NULL){
