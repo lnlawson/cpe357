@@ -26,11 +26,11 @@ int main(int argc, char const *argv[])
 			exit(-1);
 		}
 		procLine(hashTable, curline);
-
+	}
 	for (int k=0; k<size; ++k){
-		if (*(hashTable[k]) != NULL){
+		if ((hashTable[k]) != NULL){
 			printf("%s\n", hashTable[k]->word);
-			printf("%d\n", hashTable[k]->occur);
+			printf("%ld\n", hashTable[k]->occur);
 		}
 	}
 	return 0;
@@ -46,7 +46,7 @@ void procLine(HashItem *table, char *curline){
 						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
 						break;
 					}
-					tolower(compTok[i]);
+					compTok[i] = tolower(compTok[i]);
 					if (compTok[i+1] == '\0'){
 						if(NULL==(curword=(char*)malloc(i+1 * sizeof(char)))) { 
 							perror(__FUNCTION__);
@@ -54,7 +54,7 @@ void procLine(HashItem *table, char *curline){
 						}
 						strcpy(curword, compTok);
 						curword[i+1] = '\0';
-						code = hashCode(curword, size);
+						code = hashCode(curword);
 						if (*(hashTable[code]) != NULL){
 							cyclingHashTable(hashTable, code, curword, size);
 							compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
