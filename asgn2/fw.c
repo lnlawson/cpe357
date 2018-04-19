@@ -54,13 +54,13 @@ void procLine(void *table, char *curline){
 						}
 						strcpy(curword, compTok);
 						curword[i+1] = '\0';
-						code = hashCode(&curword, size);
+						code = hashCode(curword, size);
 						if (hashTable[code] != NULL){
-							cyclingHashTable(&hashTable, code, &curword, size);
+							cyclingHashTable(hashTable, code, curword, size);
 							compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
 							break;
 						}
-						createItem(&hashTable, code, &curword);
+						createItem(hashTable, code, curword);
 						amount += 1;
 						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
 						break;
@@ -78,7 +78,7 @@ void cyclingHashTable(void *table, int index, char *word){
 			break;
 		}
 		if (table[index] == NULL){
-			createItem(&table, index, &word);
+			createItem(table, index, word);
 			amount += 1;
 			break;
 		}
