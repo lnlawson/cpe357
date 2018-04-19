@@ -12,3 +12,5 @@ mytr.o : mytr.c mytr.h
 
 clean :
 	rm *.o $(MAIN) core
+
+recomp : clean all
