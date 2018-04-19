@@ -10,7 +10,7 @@
 
 #define SIZE 101
 
-struct hashitem
+typedef struct hashitem
 {
 	long int occur;
 	char *word;
