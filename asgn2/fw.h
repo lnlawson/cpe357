@@ -21,11 +21,11 @@ int hashCode(char *value);
 
 int quadProbing(int index, int inc);
 
-void createItem(void *table, int index, char *word);
+void createItem(void **table, int index, char *word);
 
-void cyclingHashTable(void *table, int index, char *word);
+void cyclingHashTable(void **table, int index, char *word);
 
-void procLine(void *table, char *curline);
+void procLine(void **table, char *curline);
 
 
 
