@@ -17,9 +17,17 @@ struct hashitem
 
 }HashItem;
 
-int quadProbing(int index, int inc, int size);
+int hashCode(char *value);
 
-int hashCode(int &value, int size);
+int quadProbing(int index, int inc);
+
+void createItem(void *table, int index, char *word);
+
+void cyclingHashTable(void *table, int index, char *word);
+
+void procLine(void *table, char *curline);
+
+
 
 
 #endif
