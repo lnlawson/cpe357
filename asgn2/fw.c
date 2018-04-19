@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
 	}
 
 	while (NULL != (curline = readline(file))){
-		if( NULL==(hashTable=malloc(size * sizeof(void *))) ) { 
+		if( NULL==(hashTable=calloc(size * sizeof(HashItem *item))) ) { 
 			perror(__FUNCTION__);
 			exit(-1);
 		}
