@@ -10,7 +10,7 @@ int amount = 0;
 int main(int argc, char const *argv[])
 {
 	FILE *file;
-	void *hashTable = NULL;
+	HashItem *hashTable = NULL;
 	char *curline = NULL;
 
 	int code = NULL;
@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
 	}
 
 	while (NULL != (curline = readline(file))){
-		if( NULL==(hashTable=(HashItem*)malloc(size * sizeof(HashItem *))) ) { 
+		if( NULL==(hashTable=(HashItem*)malloc(size)) ) { 
 			perror(__FUNCTION__);
 			exit(-1);
 		}
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-void procLine(void *table, char *curline){
+void procLine(HashItem *table, char *curline){
 		char *compTok = NULL;
 		char *curword = NULL;
 		compTok = strtok(curline, " ,./;'[]<>?:\"{}|*");
@@ -70,11 +70,11 @@ void procLine(void *table, char *curline){
 }
 
 
-void cyclingHashTable(void *table, int index, char *word){
+void cyclingHashTable(HashItem *table, int index, char *word){
 	for (int j = 1; table[index] != NULL; ++j){
 		index = quadProbing(index, j, size);
-		if ( !(strcmp(hashTable[index]->word, curword)) ) {
-			hashTable[index]->occur += 1;
+		if ( !(strcmp(table[index]->word, word)) ) {
+			table[index]->occur += 1;
 			break;
 		}
 		if (table[index] == NULL){
@@ -86,7 +86,7 @@ void cyclingHashTable(void *table, int index, char *word){
 	return;
 }
 
-void createItem(void *table, int index, char *word){
+void createItem(HashItem *table, int index, char *word){
 	table[index] = malloc(sizeof(HashItem));
 	table[index]->word = word;
 	table[index]->occur = 1;
