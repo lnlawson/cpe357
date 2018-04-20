@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 	}
 
 	while (NULL != (curline = readline(file))){
-		if( NULL==(hashTable=(HashItem*)malloc(size)) ) { 
+		if( NULL==(hashTable=(HashItem**)malloc(size)) ) { 
 			perror(__FUNCTION__);
 			exit(-1);
 		}
@@ -40,6 +40,9 @@ void procLine(HashItem **table, char *curline){
 		int code;
 		compTok = strtok(curline, " ,./;'[]<>?:\"{}|*");
 			while (compTok != NULL){
+				if (loadFactor(amount, size)){
+					reHashTable(table);
+				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
 						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
@@ -55,7 +58,7 @@ void procLine(HashItem **table, char *curline){
 						curword[i+1] = '\0';
 						code = hashCode(curword);
 						if (table[code] != NULL){
-							cyclingHashTable(table, code, curword);
+							cyclingHashTable(table, code, curword, 0);/////////////////////
 							compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*");
 							break;
 						}
@@ -68,21 +71,67 @@ void procLine(HashItem **table, char *curline){
 			}
 }
 
+int loadFactor(int amount, int size){/////////////////////////////
+	float refactorVal = .85;
+	if (((float)amount / size) > refactorVal){
+		return 1;
+	}
+	return 0;
+}
 
-void cyclingHashTable(HashItem **table, int index, char *word){
-	for (int j = 1; table[index] != NULL; ++j){
-		index = quadProbing(index, j);
-		if ( !(strcmp( (table[index])->word, word) ))  {
-			(table[index])->occur += 1;
-			break;
+HashItem **reHashTable(HashItem **table){
+	int oldSize = size;
+	int newcode;
+	int index;
+	size *= 2;
+	HashItem **tempTable = table;
+	HashItem **hashTable;
+
+	if( NULL==(hashTable=(HashItem**)malloc(size)) ) { 
+		perror(__FUNCTION__);
+		exit(-1);
 		}
-		if (table[index] == NULL){
-			createItem(table, index, word);
-			amount += 1;
-			break;
+
+	for (int o = 0; o < oldSize; ++o){
+		if (tempTable[o] != NULL){
+			newcode = hashCode(tempTable[o]->word);
+			
+			if (hashTable[newcode] != NULL){
+				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, 1);	//////////
+				hashTable[index]->occur = tempTable[o]->occur;
+
+			} else{
+				createItem(hashTable, newcode, tempTable[o]->word);
+				hashTable[newcode]->occur = tempTable[o]->occur;
+			}
 		}
 	}
-	return;
+	return hashTable;
+}
+
+int cyclingHashTable(HashItem **table, int ind, char *word, int mode){
+	int index = ind;
+	for (int j = 1; table[index] != NULL; ++j){
+		index = quadProbing(index, j);
+		if (!mode){
+			if ( !(strcmp( (table[index])->word, word) )){
+				(table[index])->occur += 1;
+				break;
+			}
+			if (table[index] == NULL){
+				createItem(table, index, word);
+				amount += 1;
+				break;
+			}
+		}
+		if (mode){
+			if (table[index] == NULL){
+				createItem(table, index, word);
+				break;
+			}
+		}
+	}
+	return index;
 }
 
 void createItem(HashItem **table, int index, char *word){
@@ -100,7 +149,7 @@ int quadProbing(int index, int inc){
 
 int hashCode(char *value){
 	int asval = 0;
-	for (int i = 0; *(value + i) != '\0'; ++i, asval += (int)(*(value + i)));
+	for (int l = 0; *(value + l) != '\0'; ++l, asval += (int)(*(value + l)));
 
 	return asval % size;
 }

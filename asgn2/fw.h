@@ -23,11 +23,13 @@ int quadProbing(int index, int inc);
 
 void createItem(HashItem **table, int index, char *word);
 
-void cyclingHashTable(HashItem **table, int index, char *word);
+int cyclingHashTable(HashItem **table, int index, char *word, int mode);
 
 void procLine(HashItem **table, char *curline);
 
+HashItem **reHashTable(HashItem **table);
 
+int loadFactor(int amount, int size);
 
 
 #endif
