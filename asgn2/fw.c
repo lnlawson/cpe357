@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
         printf("made it in main\n");
 	FILE *file;
 	HashItem **hashTable = NULL;
-	int tableSize = 101;
+	int tableSize = 5000;
 	int tableAmount = 0;
 	int *size = &tableSize;
 	int *amount = &tableAmount;
@@ -142,7 +142,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){								///////
 	int index;
 	*size *= 2;
 	HashItem **tempTable = table;
-	HashItem **hashTable;
+	HashItem **hashTable = NULL;
 
 	if( NULL==(hashTable=(HashItem**)calloc(*size, sizeof(HashItem*))) ) { 
 		perror(__FUNCTION__);
@@ -156,10 +156,13 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){								///////
 			if (hashTable[newcode] != NULL){
 				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	//////////////////////
 				hashTable[index]->occur = tempTable[o]->occur;
+				free(tempTable[o]);
 
 			} else{
 				createItem(hashTable, newcode, tempTable[o]->word);
 				hashTable[newcode]->occur = tempTable[o]->occur;
+				free(tempTable[o]);
+
 			}
 		}
 	}
