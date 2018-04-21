@@ -8,28 +8,28 @@
 #include <string.h>
 #include <ctype.h>
 
-#define SIZE 101
-
 typedef struct hashitem
 {
-	long int occur;
+	int occur;
 	char *word;
 
 }HashItem;
 
-int hashCode(char *value);
+int hashCode(char *value, int *size);
 
-int quadProbing(int index, int inc);
+int quadProbing(int index, int inc, int *size);
 
 void createItem(HashItem **table, int index, char *word);
 
-int cyclingHashTable(HashItem **table, int index, char *word, int mode);
+int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount,int mode);
 
-void procLine(HashItem **table, char *curline);
+HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
 
-HashItem **reHashTable(HashItem **table);
+void procLine(HashItem **table, char *curline, int *size, int *amount);
 
-int loadFactor(int amount, int size);
+HashItem **reHashTable(HashItem **table, int *size, int *amount);
+
+int loadFactor(int *amount, int *size);
 
 
 #endif
