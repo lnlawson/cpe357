@@ -25,7 +25,7 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
 
-void procLine(HashItem **table, char *curline, int *size, int *amount);
+HashItem **procLine(HashItem **table, char *curline, int *size, int *amount);
 
 HashItem **reHashTable(HashItem **table, int *size, int *amount);
 
