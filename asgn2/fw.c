@@ -176,7 +176,7 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 	for (int j = 0; table[index] != NULL; ++j){
 		printf("herro: 7\n");
 		index = quadProbing(index, j, size);
-		printf("%d\n", index);
+		printf("index: %d, size: %d\n", index, *size);
 		if (!mode){
 			printf("herro: 8\n");
 			if (table[index] == NULL){
