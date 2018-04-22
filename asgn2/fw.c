@@ -62,10 +62,11 @@ HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
       // printf("%d\n", *size);
       // printf("before procLine\n");
       procLine(table, current, size, amount);
+      free(current);
       // printf("after procLine\n");
       current = readline(file);
    }
-
+   free(current);
    return table;
 }
 
