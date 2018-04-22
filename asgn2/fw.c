@@ -82,9 +82,9 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 			while (compTok != NULL){
 				if (loadFactor(amount, size)){
 					// printf("REHASH\n");
-					// printf("size1: %d\n", *size);
+					printf("size1: %d\n", *size);
 					table = reHashTable(table, size, amount);
-					// printf("size2: %d\n", *size);
+					printf("size2: %d\n", *size);
 
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
@@ -177,7 +177,7 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 	for (int j = 0; table[index] != NULL; ++j){
 		// printf("herro: 7\n");
 		index = quadProbing(index, j, size);
-		printf("index: %d, size: %d\n", index, *size);
+		// printf("index: %d, size: %d\n", index, *size);
 		if (!mode){
 			// printf("herro: 8\n");
 			if (table[index] == NULL){
