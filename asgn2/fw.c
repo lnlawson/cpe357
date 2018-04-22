@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
         printf("made it in main\n");
 	FILE *file;
 	HashItem **hashTable = NULL;
-	int tableSize = 5000;
+	int tableSize = 101;
 	int tableAmount = 0;
 	int *size = &tableSize;
 	int *amount = &tableAmount;
@@ -153,7 +153,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){								///////
 	for (int o = 0; o < oldSize; ++o){
 		if (tempTable[o] != NULL){
 			newcode = hashCode(tempTable[o]->word, size);
-			
+			printf("%d\n", newcode);
 			if (hashTable[newcode] != NULL){
 				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	//////////////////////
 				hashTable[index]->occur = tempTable[o]->occur;
