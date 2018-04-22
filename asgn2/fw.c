@@ -43,6 +43,7 @@ int main(int argc, char const *argv[])
 			printf("occur: %d\n", hashTable[k]->occur);
 		}
 	}
+	printf("ALL DONE!!!!!!!\n");
 	return 0;
 }
 
