@@ -38,12 +38,12 @@ int main(int argc, char const *argv[])
 		//printf("maybe\n");
 
 		if ((hashTable[k]) != NULL){
-			if (hashTable[k]->occur>35)
-			{
+			// if (hashTable[k]->occur>35)
+			//{
 			printf("hashTable[%d]: ", k);
 			printf("%s\n", hashTable[k]->word);
 			printf("occur: %d\n", hashTable[k]->occur);			}
-		}
+		//}
 	}
 	hashTable = FreeTable(hashTable, size);
 	free(hashTable);
