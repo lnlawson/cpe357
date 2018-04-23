@@ -117,6 +117,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 							// printf("herro: 4\n");
 							cyclingHashTable(table, code, curword, size, amount, 0);
 							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n");
+							free(curword);
 							break;
 						}
 						// printf("herro: 5\n");
