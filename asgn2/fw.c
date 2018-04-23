@@ -201,7 +201,7 @@ HashItem **FreeTable(HashItem **tabl, int *size){
 	HashItem **table = tabl;
 	for (int t = 0; t<*size; ++t){
 		if (table[t]!=NULL){
-			//free(table[t]->word);
+			free(table[t]->word);
 			free(table[t]);
 		}
 	}
