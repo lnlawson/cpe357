@@ -81,7 +81,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 		char *curword = NULL;
 		int code;
 		HashItem **table = tabl;
-		compTok = strtok(curline, " ',./;[]<>?:\"{}()|*\n\13");
+		compTok = strtok(curline, " ,./;[]<>?:\"{}()|*\n\13");
 			while (compTok != NULL){
 				if (loadFactor(amount, size)){
 					// printf("REHASH\n");
@@ -92,13 +92,13 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
-						compTok = strtok(NULL, " ',./;[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
 						break;
 					}
 					compTok[i] = tolower(compTok[i]);
 					if (compTok[i+1] == '\0'){
 						// printf("hi\n");
-						if(NULL==(curword=(char*)malloc((i+1) * sizeof(char)))) { 
+						if(NULL==(curword=(char*)malloc(curword,(i+1) * sizeof(char)))) { 
 							perror(__FUNCTION__);
 							exit(-1);
 						}
@@ -117,21 +117,20 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
 							cyclingHashTable(table, code, curword, size, amount, 0);
-							compTok = strtok(NULL, " ',./;[]<>?:\"{}|()*\n\13");
-							//free(curword);
+							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
 							break;
 						}
 						// printf("herro: 5\n");
 						createItem(table, code, curword);
 						// printf("herro: 6\n");
 						*amount += 1;
-						compTok = strtok(NULL, " ',./;'[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|()*\n\13");
 						// printf("%s\n", compTok);
-						//free(curword);
 						break;
 					}
 				}
 			}
+	free(curword);
 	return table;		
 }
 
@@ -155,11 +154,13 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 			if (hashTable[newcode] != NULL){
 				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	
 				hashTable[index]->occur = tempTable[o]->occur;
+				free(tempTable[o]->word);
 				free(tempTable[o]);
 
 			} else{
 				createItem(hashTable, newcode, tempTable[o]->word);
 				hashTable[newcode]->occur = tempTable[o]->occur;
+				free(tempTable[o]->word);
 				free(tempTable[o]);
 
 			}
@@ -169,7 +170,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 	return hashTable;
 }																						
 
-int cyclingHashTable(HashItem **table, int ind, char *password, int *size, int *amount,int mode){
+int cyclingHashTable(HashItem **table, int ind, char *paraword, int *size, int *amount,int mode){
 	int index = ind;
 	for (int j = 0; table[index] != NULL; ++j){
 		// printf("herro: 7\n");
@@ -179,12 +180,12 @@ int cyclingHashTable(HashItem **table, int ind, char *password, int *size, int *
 			// printf("herro: 8\n");
 			if (table[index] == NULL){
 				// printf("herro: 9\n");
-				createItem(table, index, password);
+				createItem(table, index, paraword);
 				// printf("herro: 10\n");
 				*amount += 1;
 				break;
 			
-			} else if ( !(strcmp( (table[index])->word, password) )){
+			} else if ( !(strcmp( (table[index])->word, paraword) )){
 				// printf("herro: 11\n");
 				(table[index])->occur += 1;
 				break;
@@ -192,7 +193,7 @@ int cyclingHashTable(HashItem **table, int ind, char *password, int *size, int *
 		}
 		if (mode){
 			if (table[index] == NULL){
-				createItem(table, index, password);
+				createItem(table, index, paraword);
 				break;
 			}
 		}
@@ -204,7 +205,7 @@ HashItem **FreeTable(HashItem **tabl, int *size){
 	HashItem **table = tabl;
 	for (int t = 0; t<*size; ++t){
 		if (table[t]!=NULL){
-			//free(table[t]->word);
+			free(table[t]->word);
 			free(table[t]);
 		}
 	}
@@ -212,7 +213,9 @@ HashItem **FreeTable(HashItem **tabl, int *size){
 }
 void createItem(HashItem **table, int index, char *word){
 	table[index] = malloc(sizeof(HashItem));
-	(table[index])->word = word;
+
+	(table[index])->word = malloc(sizeof(word));
+	strcpy((table[index])->word, word);
 	(table[index])->occur = 1;
 	return;
 }
