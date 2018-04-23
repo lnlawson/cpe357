@@ -98,7 +98,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 					compTok[i] = tolower(compTok[i]);
 					if (compTok[i+1] == '\0'){
 						// printf("hi\n");
-						if(NULL==(curword=(char*)malloc(curword,(i+1) * sizeof(char)))) { 
+						if(NULL==(curword=(char*)realloc(curword,(i+1) * sizeof(char)))) { 
 							perror(__FUNCTION__);
 							exit(-1);
 						}
