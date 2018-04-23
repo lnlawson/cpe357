@@ -43,11 +43,11 @@ int main(int argc, char const *argv[])
 			printf("occur: %d\n", hashTable[k]->occur);
 		}
 	}
+	hashTable = FreeTable(hashTable, size);
+	free(hashTable);
 	printf("ALL DONE!!!!!!!\n");
 	return 0;
 }
-
-////////////////////////////function for processing file
 
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
    // printf("made it to procFile\n");
@@ -71,7 +71,6 @@ HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
    return table;
 }
 
-////////////////////////////
 
 HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
                 // printf("made it in procLine\n");
@@ -114,7 +113,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						// printf("table[index]: %s\n", table[code]->word);
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
-							cyclingHashTable(table, code, curword, size, amount, 0);/////////////////////
+							cyclingHashTable(table, code, curword, size, amount, 0);
 							compTok = strtok(NULL, " ,./;'[]<>?:\"{}|*\n");
 							break;
 						}
@@ -131,15 +130,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 	return table;		
 }
 
-int loadFactor(int *amount, int *size){/////////////////////////////
-	float refactorVal = .85;
-	if (((float)*amount / *size) > refactorVal){
-		return 1;
-	}
-	return 0;
-}//////////////////////////////////////////////^
-
-HashItem **reHashTable(HashItem **table, int *size, int *amount){								//////////////////////////////////////////////////
+HashItem **reHashTable(HashItem **table, int *size, int *amount){
 	int oldSize = *size;
 	int newcode;
 	int index;
@@ -157,7 +148,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){								///////
 			newcode = hashCode(tempTable[o]->word, size);
 			// printf("%d\n", newcode);
 			if (hashTable[newcode] != NULL){
-				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	//////////////////////
+				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	
 				hashTable[index]->occur = tempTable[o]->occur;
 				free(tempTable[o]);
 
@@ -171,9 +162,9 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){								///////
 	}
 	free(tempTable);
 	return hashTable;
-}																						//////////////////////////////////////////////////////^^^^^^^^^^^^
+}																						
 
-int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount,int mode){/////////////////////////
+int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount,int mode){
 	int index = ind;
 	for (int j = 0; table[index] != NULL; ++j){
 		// printf("herro: 7\n");
@@ -204,6 +195,16 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 	return index;
 }
 
+HashItem **FreeTable(HashItem **tabl, int *size){
+	HashItem **table = tabl;
+	for (int t = 0; t<*size; ++t){
+		if (table[t]!=NULL){
+			free(table[t]->word);
+			free(table[t]);
+		}
+	}
+	return table;
+}
 void createItem(HashItem **table, int index, char *word){
 	table[index] = malloc(sizeof(HashItem));
 	(table[index])->word = word;
@@ -224,3 +225,10 @@ int hashCode(char *value, int *size){
 	return asval % *size;
 }
 
+int loadFactor(int *amount, int *size){
+	float refactorVal = .85;
+	if (((float)*amount / *size) > refactorVal){
+		return 1;
+	}
+	return 0;
+}
