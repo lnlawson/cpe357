@@ -116,12 +116,12 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						// printf("table[index]: %s\n", table[code]->word);
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
-							cyclingHashTable(table, code, compTok, size, amount, 0);
+							cyclingHashTable(table, code, compTok, size, amount, i+1, 0);
 							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
 							break;
 						}
 						// printf("herro: 5\n");
-						createItem(table, code, compTok);
+						createItem(table, code, compTok, i+1);
 						// printf("herro: 6\n");
 						*amount += 1;
 						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
@@ -152,7 +152,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 			newcode = hashCode(tempTable[o]->word, size);
 			// printf("%d\n", newcode);
 			if (hashTable[newcode] != NULL){
-				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 1);	
+				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, size, amount, 0, 1);	
 				hashTable[index]=tempTable[o];
 				// hashTable[index]->occur = tempTable[o]->occur;
 				// free(tempTable[o]->word);
@@ -172,7 +172,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 	return hashTable;
 }																						
 
-int cyclingHashTable(HashItem **table, int ind, char *paraword, int *size, int *amount,int mode){
+int cyclingHashTable(HashItem **table, int ind, char *paraword, int *size, int *amount, int len, int mode){
 	int index = ind;
 	for (int j = 0; table[index] != NULL; ++j){
 		// printf("herro: 7\n");
@@ -182,7 +182,7 @@ int cyclingHashTable(HashItem **table, int ind, char *paraword, int *size, int *
 			// printf("herro: 8\n");
 			if (table[index] == NULL){
 				// printf("herro: 9\n");
-				createItem(table, index, paraword);
+				createItem(table, index, paraword, len);
 				// printf("herro: 10\n");
 				*amount += 1;
 				break;
@@ -213,9 +213,9 @@ HashItem **FreeTable(HashItem **tabl, int *size){
 	}
 	return table;
 }
-void createItem(HashItem **table, int index, char *word){
+void createItem(HashItem **table, int index, char *word, int len){
 		table[index] = malloc(sizeof(HashItem));
-		(table[index])->word = malloc(sizeof(word));
+		(table[index])->word = malloc(len * sizeof(char));
 		strcpy((table[index])->word, word);
 		(table[index])->occur = 1;
 

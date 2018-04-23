@@ -19,9 +19,9 @@ int hashCode(char *value, int *size);
 
 int quadProbing(int index, int inc, int *size);
 
-void createItem(HashItem **table, int index, char *word);
+void createItem(HashItem **table, int index, char *word, int len);
 
-int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount,int mode);
+int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount, int len, int mode);
 
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
 
