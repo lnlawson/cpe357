@@ -81,7 +81,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 		char *curword = NULL;
 		int code;
 		HashItem **table = tabl;
-		compTok = strtok(curline, " ,./;[]<>?:\"{}()|*\n\13");
+		compTok = strtok(curline, " ',./;[]<>?:\"{}()|*\n\13");
 			while (compTok != NULL){
 				if (loadFactor(amount, size)){
 					// printf("REHASH\n");
@@ -92,7 +92,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
-						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " ',./;[]<>?:\"{}|()*\n\13");
 						break;
 					}
 					compTok[i] = tolower(compTok[i]);
@@ -117,7 +117,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
 							cyclingHashTable(table, code, curword, size, amount, 0);
-							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
+							compTok = strtok(NULL, " ',./;[]<>?:\"{}|()*\n\13");
 							//free(curword);
 							break;
 						}
@@ -125,7 +125,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						createItem(table, code, curword);
 						// printf("herro: 6\n");
 						*amount += 1;
-						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " ',./;'[]<>?:\"{}|()*\n\13");
 						// printf("%s\n", compTok);
 						//free(curword);
 						break;
