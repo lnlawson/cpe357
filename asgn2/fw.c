@@ -125,6 +125,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						*amount += 1;
 						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|()*\n");
 						// printf("%s\n", compTok);
+						free(curword);
 						break;
 					}
 				}
