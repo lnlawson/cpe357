@@ -38,12 +38,14 @@ int main(int argc, char const *argv[])
 		//printf("maybe\n");
 
 		if ((hashTable[k]) != NULL){
+			if (hashTable[k]->occur>35)
+			{
 			printf("hashTable[%d]: ", k);
 			printf("%s\n", hashTable[k]->word);
-			printf("occur: %d\n", hashTable[k]->occur);
+			printf("occur: %d\n", hashTable[k]->occur);			}
 		}
 	}
-	hashTable = FreeTable(hashTable, size);
+	// hashTable = FreeTable(hashTable, size);
 	free(hashTable);
 	printf("ALL DONE!!!!!!!\n");
 	return 0;
@@ -195,16 +197,16 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 	return index;
 }
 
-HashItem **FreeTable(HashItem **tabl, int *size){
-	HashItem **table = tabl;
-	for (int t = 0; t<*size; ++t){
-		if (table[t]!=NULL){
-			free(table[t]->word);
-			free(table[t]);
-		}
-	}
-	return table;
-}
+// HashItem **FreeTable(HashItem **tabl, int *size){
+// 	HashItem **table = tabl;
+// 	for (int t = 0; t<*size; ++t){
+// 		if (table[t]!=NULL){
+// 			free(table[t]->word);
+// 			free(table[t]);
+// 		}
+// 	}
+// 	return table;
+// }
 void createItem(HashItem **table, int index, char *word){
 	table[index] = malloc(sizeof(HashItem));
 	(table[index])->word = word;
