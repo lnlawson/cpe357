@@ -116,12 +116,12 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						// printf("table[index]: %s\n", table[code]->word);
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
-							cyclingHashTable(table, code, compTok, size, amount, i+1, 0);
+							cyclingHashTable(table, code, compTok, size, amount, i+2, 0);
 							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
 							break;
 						}
 						// printf("herro: 5\n");
-						createItem(table, code, compTok, i+1);
+						createItem(table, code, compTok, i+2);
 						// printf("herro: 6\n");
 						*amount += 1;
 						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
