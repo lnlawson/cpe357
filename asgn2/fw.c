@@ -92,7 +92,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
-						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n");
+						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
 						break;
 					}
 					compTok[i] = tolower(compTok[i]);
