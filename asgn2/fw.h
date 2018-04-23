@@ -29,7 +29,7 @@ HashItem **procLine(HashItem **table, char *curline, int *size, int *amount);
 
 HashItem **reHashTable(HashItem **table, int *size, int *amount);
 
-// HashItem **FreeTable(HashItem **tabl, int *size);
+HashItem **FreeTable(HashItem **tabl, int *size);
 
 int loadFactor(int *amount, int *size);
 
