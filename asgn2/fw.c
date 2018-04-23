@@ -118,7 +118,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 							// printf("herro: 4\n");
 							cyclingHashTable(table, code, curword, size, amount, 0);
 							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n");
-							free(curword);
+							//free(curword);
 							break;
 						}
 						// printf("herro: 5\n");
@@ -127,7 +127,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						*amount += 1;
 						compTok = strtok(NULL, " ,./;'[]<>?:\"{}|()*\n");
 						// printf("%s\n", compTok);
-						free(curword);
+						//free(curword);
 						break;
 					}
 				}
@@ -169,7 +169,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 	return hashTable;
 }																						
 
-int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount,int mode){
+int cyclingHashTable(HashItem **table, int ind, char *password, int *size, int *amount,int mode){
 	int index = ind;
 	for (int j = 0; table[index] != NULL; ++j){
 		// printf("herro: 7\n");
@@ -179,12 +179,12 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 			// printf("herro: 8\n");
 			if (table[index] == NULL){
 				// printf("herro: 9\n");
-				createItem(table, index, word);
+				createItem(table, index, password);
 				// printf("herro: 10\n");
 				*amount += 1;
 				break;
 			
-			} else if ( !(strcmp( (table[index])->word, word) )){
+			} else if ( !(strcmp( (table[index])->word, password) )){
 				// printf("herro: 11\n");
 				(table[index])->occur += 1;
 				break;
@@ -192,7 +192,7 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amou
 		}
 		if (mode){
 			if (table[index] == NULL){
-				createItem(table, index, word);
+				createItem(table, index, password);
 				break;
 			}
 		}
