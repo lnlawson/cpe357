@@ -47,6 +47,7 @@ int main(int argc, char const *argv[])
 	}
 	hashTable = FreeTable(hashTable, size);
 	free(hashTable);
+	fclose(file);
 	printf("ALL DONE!!!!!!!\n");
 	return 0;
 }
