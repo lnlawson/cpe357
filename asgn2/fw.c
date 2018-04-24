@@ -24,6 +24,7 @@ int main(int argc, char const *argv[])
 
    hashTable = procFile(hashTable, file, size, amount);
    hashTable = filterTable(hashTable, size, amount);
+   qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
 
    printf("done\n");
 	for (int k=0; k<*amount; ++k){
@@ -239,9 +240,27 @@ HashItem **filterTable(HashItem **temptable, int *size, int *amount){
 	return hashTable;
 }
 
-// int compFunction(void *a, void *b){
-// 	if (a->occur == b->occur){
+int compFunction(const void *a, const void *b){
+	int result;
+	int aOccur = ((HashItem *)a)->occur;
+	int bOccur = ((HashItem *)b)->occur;
+	int aAsval = ((HashItem *)a)->ascival;
+	int bAsval = ((HashItem *)b)->ascival;
+	int aAlpha = (int)(((HashItem *)a)->word[0]);
+	int bAlpha = (int)(((HashItem *)b)->word[0]);
+	if (aOccur == bOccur){
+		if (aAsval == bAsval){
+			result = (aAlpha - bAlpha);
+		}else{result = (aAsval - bAsval);}
+		
+	} else{result = (aOccur - bOccur);}
 
-// 	}
-
-// }
+	if (result>0){
+		return 1;
+	}else if (result<0){
+		return -1;
+	} else{
+		return 0;
+	}
+	//printf("%d\n", ((HashItem *)a)->occur);
+}

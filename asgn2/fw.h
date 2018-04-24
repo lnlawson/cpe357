@@ -38,5 +38,6 @@ HashItem **filterTable(HashItem **temptable, int *size, int *amount);
 
 int loadFactor(int *amount, int *size);
 
+int compFunction(const void *a, const void *b);
 
 #endif
