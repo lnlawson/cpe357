@@ -31,6 +31,8 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount);
 
 HashItem **FreeTable(HashItem **tabl, int *size);
 
+HashItem **filterTable(HashItem **temptable, int *size, int *amount);
+
 int loadFactor(int *amount, int *size);
 
 
