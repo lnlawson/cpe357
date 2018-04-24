@@ -11,17 +11,20 @@
 typedef struct hashitem
 {
 	int occur;
+	int ascival;
 	char *word;
 
 }HashItem;
 
-int hashCode(char *value, int *size);
+int hashCode(int asval, int *size);
+
+int asciiAdd(char *value);
 
 int quadProbing(int index, int inc, int *size);
 
-void createItem(HashItem **table, int index, char *word, int len);
+void createItem(HashItem **table, int index, char *word, int asval, int len);
 
-int cyclingHashTable(HashItem **table, int ind, char *word, int *size, int *amount, int len, int mode);
+int cyclingHashTable(HashItem **table, int ind, char *word, int asval, int *size, int *amount, int len, int mode);
 
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
 
