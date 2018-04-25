@@ -26,6 +26,10 @@ void createItem(HashItem **table, int index, char *word, int asval, int len);
 
 int cyclingHashTable(HashItem **table, int ind, char *word, int asval, int *size, int *amount, int len, int mode);
 
+void printOutput(HashItem **table, int *amount, int nflag);
+
+HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n);
+
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
 
 HashItem **procLine(HashItem **table, char *curline, int *size, int *amount);

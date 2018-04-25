@@ -8,59 +8,77 @@
 
 int main(int argc, char const *argv[])
 {
-        // printf("made it in main\n");
-	FILE *file;
+	// FILE *file;
 	HashItem **hashTable = NULL;
 	int tableSize = 101;
 	int tableAmount = 0;
+	int nAmount = 10;
 	int *size = &tableSize;
 	int *amount = &tableAmount;
+	int *n = &nAmount;
 
 
-	if (NULL == (file = fopen(argv[1], "r"))){
-		perror(__FUNCTION__);
-		exit(-1);
-	}
+	// if (NULL == (file = fopen(argv[1], "r"))){
+	// 	perror(__FUNCTION__);
+	// 	exit(-1);
+	// }
 
-   hashTable = procFile(hashTable, file, size, amount);
+   hashTable = procInput(hashTable, argc, argv, size, amount, n);
    hashTable = filterTable(hashTable, size, amount);
    qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
 
-   printf("done\n");
-	for (int k=0; k<*amount; ++k){
-		//printf("maybe\n");
-
-		//if ((hashTable[k]) != NULL){
-			if (hashTable[k]->occur>5)
-			{
-			printf("hashTable[%d]: ", k);
-			printf("%s\n", hashTable[k]->word);
-			printf("occur: %d\n", hashTable[k]->occur);			}
-		}
-	//}
+   printOutput(hashTable, amount, *n);
+   // printf("done\n");
+	// for (int k=0; k<*amount; ++k){
+	// 		if (hashTable[k]->occur>50){
+	// 		printf("hashTable[%d]: ", k);
+	// 		printf("%s\n", hashTable[k]->word);
+	// 		printf("occur: %d\n", hashTable[k]->occur);
+	// 		}
+	// }
 	hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
 	free(hashTable);
-	fclose(file);
-	printf("ALL DONE!!!!!!!\n");
+	// fclose(file);
+	// printf("ALL DONE!!!!!!!\n");
 	return 0;
 }
 
+HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n){
+   FILE *file;
+
+   if(agc == 3 && (strcmp(agv[1], "-n") == 0)){
+      table = procFile(table, stdin, size, amount);
+   }
+   for (int i = 1; i < agc; i++){
+
+      if (strcmp(agv[i],"-n") == 0){
+         i++;
+         *n = (int)agv[i];
+      } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
+         fprintf(stderr,"\nfw: extra operand %s\n", &agv[i][1]);
+      } else{
+         if (NULL == (file = fopen(agv[i], "r"))){
+            perror(__FUNCTION__);
+            exit(-1);
+         }
+         table = procFile(table, file, size, amount);
+      }
+   }
+   fclose(file);
+	return table;
+}
+
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
-   // printf("made it to procFile\n");
    char *current = readline(file);
    table = (HashItem**)calloc(*size, sizeof(HashItem*)); 
 	if(table == NULL){
-	   printf("problem with mallocing table\n");
+	   // printf("problem with mallocing table\n");
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
    while (current != NULL){
-      // printf("current: %s\n",current);
-      // printf("%d\n", *size);
-      // printf("before procLine\n");
       table = procLine(table, current, size, amount);
       free(current);
-      // printf("after procLine\n");
       current = readline(file);
    }
    free(current);
@@ -69,20 +87,16 @@ HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
 
 
 HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
-                // printf("made it in procLine\n");
 		char *compTok = NULL;
-		// char *curword = NULL;
 		int code;
 		int asval;
 		HashItem **table = tabl;
 		compTok = strtok(curline, " -',./;[]<>?:\"{}()|*\n\13");
 			while (compTok != NULL){
 				if (loadFactor(amount, size)){
-					// printf("REHASH\n");
-					printf("size1: %d\n", *size);
+					// printf("size1: %d\n", *size);
 					table = reHashTable(table, size, amount);
-					printf("size2: %d\n", *size);
-
+					// printf("size2: %d\n", *size);
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
@@ -96,14 +110,11 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						code = hashCode(asval, size);
 						
 						if ((table[code]) != NULL){
-							// printf("herro: 4\n");
 							cyclingHashTable(table, code, compTok, asval, size, amount, i+2, 0);
 							compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
 							break;
 						}
-						// printf("herro: 5\n");
 						createItem(table, code, compTok, asval, i+2);
-						// printf("herro: 6\n");
 						*amount += 1;
 						compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
 						break;
@@ -111,6 +122,36 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 				}
 			}
 	return table;		
+}
+
+void printOutput(HashItem **table, int *amount, int nflag){
+	int digits;
+	int spaces;
+	char *occurColumn;
+	if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
+	perror(__FUNCTION__);
+	exit(-1);
+	}
+	printf("The top %d words (out of %d) are:\n", nflag, *amount);
+	for (int i = 0; i < nflag; ++i){
+		digits = 0;
+		int tempOccur = table[i]->occur;
+		while(tempOccur != 0)
+		{
+        tempOccur /= 10;
+        ++digits;
+    	}
+    	spaces = 9 - digits;
+    	for (int j = 0; j<9; ++j){
+    		if (j<spaces){
+    		occurColumn[j] = ' ';
+    	} else if (j>= spaces){
+    		occurColumn[j] = '\0';
+    	}
+   }
+   printf("%s%d %s\n", occurColumn, table[i]->occur, table[i]->word);
+   }
+free(occurColumn);
 }
 
 HashItem **reHashTable(HashItem **table, int *size, int *amount){
@@ -129,7 +170,6 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 	for (int o = 0; o < oldSize; ++o){
 		if (tempTable[o] != NULL){
 			newcode = hashCode(tempTable[o]->ascival, size);
-			// printf("%d\n", newcode);
 			if (hashTable[newcode] != NULL){
 				index = cyclingHashTable(hashTable, newcode, tempTable[o]->word, tempTable[o]->ascival, size, amount, 0, 1);	
 				hashTable[index]=tempTable[o];
@@ -149,27 +189,20 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount){
 int cyclingHashTable(HashItem **table, int ind, char *paraword, int asval, int *size, int *amount, int len, int mode){
 	int index = ind;
 	for (int j = 0; table[index] != NULL; ++j){
-		// printf("herro: 7\n");
 		index = quadProbing(index, j, size);
-		// printf("index: %d, size: %d\n", index, *size);
 		if (!mode){
-			// printf("herro: 8\n");
 			if (table[index] == NULL){
-				// printf("herro: 9\n");
 				createItem(table, index, paraword, asval, len);
-				// printf("herro: 10\n");
 				*amount += 1;
 				break;
 			
 			} else if ( !(strcmp( (table[index])->word, paraword) )){
-				// printf("herro: 11\n");
 				(table[index])->occur += 1;
 				break;
 			}
 		}
 		if (mode){
 			if (table[index] == NULL){
-				//createItem(table, index, paraword, mode);
 				break;
 			}
 		}
@@ -241,38 +274,22 @@ HashItem **filterTable(HashItem **temptable, int *size, int *amount){
 }
 
 int compFunction(const void *a, const void *b){
-	//(HashItem *) a = (has)
-
 	int result;
+
 	if (a == NULL && b == NULL){
 		return 0;
 	} else if (a != NULL && b == NULL){
 		return -1;
-	}else if (a == NULL && b != NULL){
+	} else if (a == NULL && b != NULL){
 		return 1;
 	}
 
 	HashItem *A = (*(HashItem **)a);
 	HashItem *B = (*(HashItem **)b);
-	// int aAsval = ((HashItem *)a)->ascival;
-	// int bAsval = ((HashItem *)b)->ascival;
-	//int aAlpha = (int)(((HashItem *)a)->word[0]);
-	//int bAlpha = (int)(((HashItem *)b)->word[0]);
+
 	if (B->occur == A->occur){
 		result = strcmp( B->word, A->word );
-	// 	// if (aAsval == bAsval){
-	// 	// 	result = (aAlpha - bAlpha);
-	// 	// }else{result = (aAsval - bAsval);}
-		
 	} else{result = (B->occur - A->occur);}
 
 	return result;
-	// if (result>0){
-	// 	return 1;
-	// }else if (result<0){
-	// 	return -1;
-	// } else{
-	// 	return 0;
-	// }
-	//printf("%d\n", ((HashItem *)a)->occur);
 }
