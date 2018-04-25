@@ -30,14 +30,14 @@ int main(int argc, char const *argv[])
 	for (int k=0; k<*amount; ++k){
 		//printf("maybe\n");
 
-		if ((hashTable[k]) != NULL){
+		//if ((hashTable[k]) != NULL){
 			if (hashTable[k]->occur>5)
 			{
 			printf("hashTable[%d]: ", k);
 			printf("%s\n", hashTable[k]->word);
 			printf("occur: %d\n", hashTable[k]->occur);			}
 		}
-	}
+	//}
 	hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
 	free(hashTable);
 	fclose(file);
@@ -75,7 +75,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 		int code;
 		int asval;
 		HashItem **table = tabl;
-		compTok = strtok(curline, " ,./;[]<>?:\"{}()|*\n\13");
+		compTok = strtok(curline, " -',./;[]<>?:\"{}()|*\n\13");
 			while (compTok != NULL){
 				if (loadFactor(amount, size)){
 					// printf("REHASH\n");
@@ -86,7 +86,7 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
 					if (isdigit(compTok[i])){
-						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
 						break;
 					}
 					compTok[i] = tolower(compTok[i]);
@@ -98,14 +98,14 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 						if ((table[code]) != NULL){
 							// printf("herro: 4\n");
 							cyclingHashTable(table, code, compTok, asval, size, amount, i+2, 0);
-							compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
+							compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
 							break;
 						}
 						// printf("herro: 5\n");
 						createItem(table, code, compTok, asval, i+2);
 						// printf("herro: 6\n");
 						*amount += 1;
-						compTok = strtok(NULL, " ,./;[]<>?:\"{}|()*\n\13");
+						compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
 						break;
 					}
 				}
@@ -241,26 +241,38 @@ HashItem **filterTable(HashItem **temptable, int *size, int *amount){
 }
 
 int compFunction(const void *a, const void *b){
-	int result;
-	int aOccur = ((HashItem *)a)->occur;
-	int bOccur = ((HashItem *)b)->occur;
-	int aAsval = ((HashItem *)a)->ascival;
-	int bAsval = ((HashItem *)b)->ascival;
-	int aAlpha = (int)(((HashItem *)a)->word[0]);
-	int bAlpha = (int)(((HashItem *)b)->word[0]);
-	if (aOccur == bOccur){
-		if (aAsval == bAsval){
-			result = (aAlpha - bAlpha);
-		}else{result = (aAsval - bAsval);}
-		
-	} else{result = (aOccur - bOccur);}
+	//(HashItem *) a = (has)
 
-	if (result>0){
-		return 1;
-	}else if (result<0){
-		return -1;
-	} else{
+	int result;
+	if (a == NULL && b == NULL){
 		return 0;
+	} else if (a != NULL && b == NULL){
+		return -1;
+	}else if (a == NULL && b != NULL){
+		return 1;
 	}
+
+	HashItem *A = (*(HashItem **)a);
+	HashItem *B = (*(HashItem **)b);
+	// int aAsval = ((HashItem *)a)->ascival;
+	// int bAsval = ((HashItem *)b)->ascival;
+	//int aAlpha = (int)(((HashItem *)a)->word[0]);
+	//int bAlpha = (int)(((HashItem *)b)->word[0]);
+	if (B->occur == A->occur){
+		result = strcmp( B->word, A->word );
+	// 	// if (aAsval == bAsval){
+	// 	// 	result = (aAlpha - bAlpha);
+	// 	// }else{result = (aAsval - bAsval);}
+		
+	} else{result = (B->occur - A->occur);}
+
+	return result;
+	// if (result>0){
+	// 	return 1;
+	// }else if (result<0){
+	// 	return -1;
+	// } else{
+	// 	return 0;
+	// }
 	//printf("%d\n", ((HashItem *)a)->occur);
 }
