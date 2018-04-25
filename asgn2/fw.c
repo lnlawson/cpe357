@@ -53,7 +53,7 @@ HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, in
 
       if (strcmp(agv[i],"-n") == 0){
          i++;
-         *n = (int)agv[i];
+         sscanf(agv[i], "%d", n);
       } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
          fprintf(stderr,"\nfw: extra operand %s\n", &agv[i][1]);
       } else{
