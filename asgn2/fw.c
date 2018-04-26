@@ -130,15 +130,15 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	int digits;
 	int spaces;
 	char *occurColumn;
-	int temp;
+	int temp;			////////////////////
 	if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
 	perror(__FUNCTION__);
 	exit(-1);
 	}
-	if (*amount < *nflag){
+	if (*amount < nflag){		//////////////////////
 		temp = *amount;
-	} else {temp = *nflag;}
-	
+	} else {temp = nflag;}		/////////////////////////
+
 	printf("The top %d words (out of %d) are:\n", nflag, *amount);
 	for (int i = 0; i < temp; ++i){
 		digits = 0;
