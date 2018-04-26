@@ -221,9 +221,12 @@ char *procWord(char *line){
 		curSpot = line;
 		nullFlag = 0;
 	}
-	if (curSpot[0] == '\0' || nullFlag){
+	if (nullFlag){
+		return NULL;
+	} else if (curSpot[0] == '\0'){
 		return NULL;
 	}
+	
 	int i = 0;
 	while (isalpha(curSpot[i])){
 		i++;
