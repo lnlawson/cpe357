@@ -142,7 +142,7 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	perror(__FUNCTION__);
 	exit(-1);
 	}
-	printf("\nThe top %d words (out of %d) are:\n", nflag, *amount);
+	printf("The top %d words (out of %d) are:\n", nflag, *amount);
 	for (int i = 0; i < nflag; ++i){
 		digits = 0;
 		int tempOccur = table[i]->occur;
@@ -221,9 +221,6 @@ int cyclingHashTable(HashItem **table, int ind, char *paraword, int asval, int *
 }
 
 char *procWord(char *line){
-	// if (*line == NULL){
-	// 	return NULL;
-	// }
 
 	static char *curSpot;
 	static int nullFlag;
@@ -246,6 +243,7 @@ char *procWord(char *line){
 		while (!isalpha(curSpot[i])){
 			if (curSpot[i] == '\0'){
 				nullFlag = 1;
+				break;
 			}
 			++i;
 		}
@@ -256,35 +254,6 @@ char *procWord(char *line){
 	++i;
 	curSpot = curSpot + i;
 	return curSpot - i;
-
-
-	// if (line != NULL){
-	// 	if (line[0] == '\0'){
-	// 		return NULL;
-	// 	}
-	// 	// printf("herro\n");
-	// 	curSpot = line;
-	// 	nullFlag = 0;	
-	// }
-	// // printf("%d\n", nullFlag);
-	// if (nullFlag){
-	// 	printf("NULL found\n");
-	// 	return NULL;
-	// }
-	// int i = 0;
-	// while (curSpot[i] != '\0' && isalpha(curSpot[i])){
-	// 	printf("%c\n", curSpot[i]);
-	// 	++i;
-	// }
-	// if (curSpot[i] == '\0'){
-	// 	// printf("hiiiiiiiii\n");
-	// 	nullFlag = 1;
-	// }
-	// curSpot[i] = '\0';
-	// ++i;
-	// curSpot = curSpot + i;
-	// return curSpot - i;
-
 }
 
 HashItem **FreeTable(HashItem **tabl, int *size){
