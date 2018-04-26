@@ -130,12 +130,17 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	int digits;
 	int spaces;
 	char *occurColumn;
+	int temp;
 	if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
 	perror(__FUNCTION__);
 	exit(-1);
 	}
+	if (*amount < *nflag){
+		temp = *amount;
+	} else {temp = *nflag;}
+	
 	printf("The top %d words (out of %d) are:\n", nflag, *amount);
-	for (int i = 0; i < nflag; ++i){
+	for (int i = 0; i < temp; ++i){
 		digits = 0;
 		int tempOccur = table[i]->occur;
 		while(tempOccur != 0)
@@ -221,12 +226,12 @@ char *procWord(char *line){
 		curSpot = line;
 		nullFlag = 0;
 	}
-	if (nullFlag){
+	if (nullFlag){			/////////////////
 		return NULL;
 	} else if (curSpot[0] == '\0'){
 		return NULL;
-	}
-	
+	} ///////////////////////////
+
 	int i = 0;
 	while (isalpha(curSpot[i])){
 		i++;
