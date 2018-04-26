@@ -142,7 +142,7 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	perror(__FUNCTION__);
 	exit(-1);
 	}
-	printf("The top %d words (out of %d) are:\n", nflag, *amount);
+	printf("\nThe top %d words (out of %d) are:\n", nflag, *amount);
 	for (int i = 0; i < nflag; ++i){
 		digits = 0;
 		int tempOccur = table[i]->occur;
