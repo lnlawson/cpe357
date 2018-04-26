@@ -28,6 +28,8 @@ int cyclingHashTable(HashItem **table, int ind, char *word, int asval, int *size
 
 void printOutput(HashItem **table, int *amount, int nflag);
 
+char *procWord(char *line);
+
 HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n);
 
 HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);

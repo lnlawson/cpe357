@@ -34,8 +34,8 @@ if ( i ) { /* if there was a string read, copy it
 * into a new buffer. Otherwise, return
 * NULL to signal EOF
 */ 
-buff[i] = '\0'; /* final nul */
-if(NULL==(ret=(char*)malloc(i+1))) {
+buff[i-1] = '\0'; /* final nul */
+if(NULL==(ret=(char*)malloc(i))) {
 	perror(__FUNCTION__);
 	exit(-1);
 }

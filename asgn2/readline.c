@@ -9,6 +9,7 @@ extern char *readline(FILE *infile) {
 * and as the string grows expand the buffer as necessary
 */
 int i;
+int j = 0;
 char *buff;
 char *ret;
 int size=0;
@@ -27,10 +28,13 @@ for(i=0,c=getc(infile); c!=EOF ;c=getc(infile)) {
 		} 
 	}
 	buff[i++]=c;
-	if( c =='\n')
+	j = 1;
+	if( c =='\n'){
+		i--;
 		break;
-}
-if ( i ) { /* if there was a string read, copy it
+	}
+}	
+if ( j ) { /* if there was a string read, copy it
 * into a new buffer. Otherwise, return
 * NULL to signal EOF
 */ 
