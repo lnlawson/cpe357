@@ -97,22 +97,14 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 		compTok = procWord(curline);
 		// printf("%s\n", compTok);
 			while (compTok != NULL){
-				// printf("%s\n", compTok);
-				// printf("hi\n");
-				// if (compTok[0] == '\0'){
-				// 	// printf("check\n");
-				// 	compTok = procWord(NULL);
-				// }
+
 				if (loadFactor(amount, size)){
 					// printf("size1: %d\n", *size);
 					table = reHashTable(table, size, amount);
 					// printf("size2: %d\n", *size);
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
-					// if (isdigit(compTok[i])){
-					// 	compTok = procWord(NULL);
-					// 	break;
-					// }
+
 					compTok[i] = tolower(compTok[i]);
 					if (compTok[i+1] == '\0'){
 						// printf("hiiiiiiiiiiiiiiiii\n");
