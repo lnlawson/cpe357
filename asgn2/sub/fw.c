@@ -54,8 +54,10 @@ HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, in
       if (strcmp(agv[i],"-n") == 0){
          i++;
          sscanf(agv[i], "%d", n);
+
       } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
          fprintf(stderr,"\nfw: extra operand %s\n", &agv[i][1]);
+
       } else{
          if (NULL == (file = fopen(agv[i], "r"))){
             perror(__FUNCTION__);
@@ -77,6 +79,7 @@ HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
 	   exit(-1);
 	}
    while (current != NULL){
+   	// printf("start\n");
       table = procLine(table, current, size, amount);
       free(current);
       current = readline(file);
@@ -91,32 +94,39 @@ HashItem **procLine(HashItem **tabl, char *curline, int *size, int *amount){
 		int code;
 		int asval;
 		HashItem **table = tabl;
-		compTok = strtok(curline, " -',./;[]<>?:\"{}()|*\n\13");
+		compTok = procWord(curline);
+		// printf("%s\n", compTok);
 			while (compTok != NULL){
+				// printf("%s\n", compTok);
+				// printf("hi\n");
+				// if (compTok[0] == '\0'){
+				// 	// printf("check\n");
+				// 	compTok = procWord(NULL);
+				// }
 				if (loadFactor(amount, size)){
 					// printf("size1: %d\n", *size);
 					table = reHashTable(table, size, amount);
 					// printf("size2: %d\n", *size);
 				}
 				for (int i = 0; compTok[i] != '\0'; ++i){
-					if (isdigit(compTok[i])){
-						compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
-						break;
-					}
+					// if (isdigit(compTok[i])){
+					// 	compTok = procWord(NULL);
+					// 	break;
+					// }
 					compTok[i] = tolower(compTok[i]);
 					if (compTok[i+1] == '\0'){
-						
+						// printf("hiiiiiiiiiiiiiiiii\n");
 						asval = asciiAdd(compTok);
 						code = hashCode(asval, size);
 						
 						if ((table[code]) != NULL){
 							cyclingHashTable(table, code, compTok, asval, size, amount, i+2, 0);
-							compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
+							compTok = procWord(NULL);
 							break;
 						}
 						createItem(table, code, compTok, asval, i+2);
 						*amount += 1;
-						compTok = strtok(NULL, " -',./;[]<>?:\"{}|()*\n\13");
+						compTok = procWord(NULL);
 						break;
 					}
 				}
@@ -208,6 +218,73 @@ int cyclingHashTable(HashItem **table, int ind, char *paraword, int asval, int *
 		}
 	}
 	return index;
+}
+
+char *procWord(char *line){
+	// if (*line == NULL){
+	// 	return NULL;
+	// }
+
+	static char *curSpot;
+	static int nullFlag;
+
+	if (line != NULL){
+		curSpot = line;
+		nullFlag = 0;
+	}
+	if (curSpot[0] == '\0' || nullFlag){
+		return NULL;
+	}
+	int i = 0;
+	while (isalpha(curSpot[i])){
+		i++;
+		if (curSpot[i] == '\0'){
+			nullFlag = 1;
+		}
+	}
+	if (!i){
+		while (!isalpha(curSpot[i])){
+			if (curSpot[i] == '\0'){
+				nullFlag = 1;
+			}
+			++i;
+		}
+		curSpot = curSpot + i;
+		return procWord(NULL);
+	}
+	curSpot[i] = '\0';
+	++i;
+	curSpot = curSpot + i;
+	return curSpot - i;
+
+
+	// if (line != NULL){
+	// 	if (line[0] == '\0'){
+	// 		return NULL;
+	// 	}
+	// 	// printf("herro\n");
+	// 	curSpot = line;
+	// 	nullFlag = 0;	
+	// }
+	// // printf("%d\n", nullFlag);
+	// if (nullFlag){
+	// 	printf("NULL found\n");
+	// 	return NULL;
+	// }
+	// int i = 0;
+	// while (curSpot[i] != '\0' && isalpha(curSpot[i])){
+	// 	printf("%c\n", curSpot[i]);
+	// 	++i;
+	// }
+	// if (curSpot[i] == '\0'){
+	// 	// printf("hiiiiiiiii\n");
+	// 	nullFlag = 1;
+	// }
+	// curSpot[i] = '\0';
+	// ++i;
+	// curSpot = curSpot + i;
+	// return curSpot - i;
+
 }
 
 HashItem **FreeTable(HashItem **tabl, int *size){
