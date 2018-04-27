@@ -92,7 +92,11 @@ HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, in
                break;
             }
          }*/
-         if ((sscanf(agv[i+1], "%d", n)) == 0) {
+         if (i+1 == agc){
+         	perror("Usage");
+	       	exit(-1);
+
+         } else if ((scanf(agv[i+1], "%d", n)) < strlen(agv[i+1])) {
             fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[i+1]);
             exit(-1);
          }
