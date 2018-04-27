@@ -13,7 +13,7 @@ int j = 0;
 char *buff;
 char *ret;
 int size=0;
-long int c;
+int c;
 size=CHUNK;
 int replaceTemp = 32;
 if(NULL==(buff=(char*)malloc(size * sizeof(char)))) { 
@@ -28,7 +28,7 @@ for(i=0,c=getc(infile); c!=EOF ;c=getc(infile)) {
 			exit(-1);
 		} 
 	}
-	if (c < 0 || c > 127){
+	if ((c < 0) || (c > 127)){
 		c = replaceTemp;
 	}
 	buff[i++]=(char)c;
