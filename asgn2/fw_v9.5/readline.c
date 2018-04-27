@@ -13,14 +13,14 @@ int j = 0;
 char *buff;
 char *ret;
 int size=0;
-int c;
+long int c;
 size=CHUNK;
 int replaceTemp = 32;
 if(NULL==(buff=(char*)malloc(size * sizeof(char)))) { 
 	perror(__FUNCTION__);
 	exit(-1);
 }
-for(i=0,c=fgetc(infile); c!=EOF ;c=getc(infile)) {
+for(i=0,c=getc(infile); c!=EOF ;c=getc(infile)) {
 	if(i>=size-1){ 
 		size+=CHUNK;
 		if(NULL==(buff=(char*)realloc(buff,size * sizeof(char)))) {
