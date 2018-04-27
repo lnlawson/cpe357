@@ -15,6 +15,7 @@ char *ret;
 int size=0;
 int c;
 size=CHUNK;
+int replaceTemp = 32;
 if(NULL==(buff=(char*)malloc(size * sizeof(char)))) { 
 	perror(__FUNCTION__);
 	exit(-1);
@@ -26,6 +27,9 @@ for(i=0,c=getc(infile); c!=EOF ;c=getc(infile)) {
 			perror(__FUNCTION__);
 			exit(-1);
 		} 
+	}
+	if (c < 0 || c > 127){
+		c = replaceTemp;
 	}
 	buff[i++]=(char)c;
 	j = 1;
