@@ -24,9 +24,11 @@ int main(int argc, char const *argv[])
 	// }
 
    hashTable = procInput(hashTable, argc, argv, size, amount, n);
-   hashTable = filterTable(hashTable, size, amount);
-   qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
 
+   if (hashTable != NULL){ 
+      hashTable = filterTable(hashTable, size, amount, *n);
+      qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
+   }
    printOutput(hashTable, amount, *n);
    // printf("done\n");
 	// for (int k=0; k<*amount; ++k){
@@ -36,42 +38,112 @@ int main(int argc, char const *argv[])
 	// 		printf("occur: %d\n", hashTable[k]->occur);
 	// 		}
 	// }
-	hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
-	free(hashTable);
-	// fclose(file);
+   hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
+   free(hashTable);
+         // fclose(file);
 	// printf("ALL DONE!!!!!!!\n");
-	return 0;
+   return 0;
 }
 
-HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n){
-   FILE *file;
 
+HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n){
+   FILE *file = NULL;
+   //int ijuju;
+   //int *juju = &ijuju;
+   HashItem **tempTable = NULL;
    if(agc == 3 && (strcmp(agv[1], "-n") == 0)){
-      table = procFile(table, stdin, size, amount);
+         //printf("sscanf: %d\n",sscanf(agv[i+1], "%d", n));
+         if ((sscanf(agv[2], "%d", n)) == 0) {
+            fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[2]);
+            exit(-1);
+         }
+         else{
+            if (stdin == NULL){
+	       perror("Usage");
+	       exit(-1);
+            }
+            else{
+            tempTable = procFile(tempTable, stdin, size, amount, n);
+            return tempTable;
+            }
+         }
    }
+   if(agc == 1){
+      if (stdin == NULL){
+	       perror("Usage");
+	       exit(-1);
+            }
+      else{
+            tempTable = procFile(tempTable, stdin, size, amount, n);
+            return tempTable;
+      }
+
+   }
+
    for (int i = 1; i < agc; i++){
 
       if (strcmp(agv[i],"-n") == 0){
-         i++;
-         sscanf(agv[i], "%d", n);
+         //printf("sscanf: %d\n",sscanf(agv[i+1], "%d", n));
+         
+         /*for (int k = 0; agv[i+1][k] != '\0'; k++){
+            if ((sscanf(&agv[i+1][k], "%d", juju)) == 0){
+               fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[i+1]);
+               *juju = 0;
+               break;
+            }
+         }*/
+         if ((sscanf(agv[i+1], "%d", n)) == 0) {
+            fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[i+1]);
+            exit(-1);
+         }
+
+         else{
+            i++;
+            sscanf(agv[i], "%d", n);
+         }
 
       } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
-         fprintf(stderr,"\nfw: extra operand %s\n", &agv[i][1]);
+         fprintf(stderr,"Usage: extra operand %s\n", &agv[i][1]);
+         exit(-1);
 
       } else{
          if (NULL == (file = fopen(agv[i], "r"))){
-            perror(__FUNCTION__);
-            exit(-1);
+            perror(agv[i]);
+            //printf("The top %d words (out of 0) are:\n", *n);
+            //exit(-1);
+            //i++;
+            continue;
+            /*if (i == agc){
+               //printf("The top %d words (out of %d) are:\n", *n, *amount);
+               break;
+            }*/
          }
-         table = procFile(table, file, size, amount);
+         tempTable = procFile(tempTable, file, size, amount, n);
       }
    }
-   fclose(file);
-	return table;
+   if (file != NULL){
+      fclose(file);
+   }
+   return tempTable;
 }
 
-HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
+
+
+
+HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount, int *nflag){
+
+   if (file == NULL){
+      /*printf("The top %d words (out of 0) are:\n", *nflag);
+      exit(-1);*/
+      return table;
+   }
    char *current = readline(file);
+   if (current == NULL){
+      //printf("The top %d words (out of 0) are:\n", *nflag);
+      //exit(-1);
+      return table;
+   }
+
    table = (HashItem**)calloc(*size, sizeof(HashItem*)); 
 	if(table == NULL){
 	   // printf("problem with mallocing table\n");
@@ -131,15 +203,22 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	int spaces;
 	char *occurColumn;
 	int temp;
-	if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
-	perror(__FUNCTION__);
-	exit(-1);
+        if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
+	    perror(__FUNCTION__);
+	    exit(-1);
 	}
-	if (*amount < nflag){
-		temp = *amount;
-	} else if (nflag <= *amount){
-		temp = nflag;
-	}
+
+        /////////////////////////
+        if(*amount < nflag){
+            temp = *amount;
+        } else if(nflag <= *amount){
+            temp = nflag;
+        }
+        /////////////////////////
+
+
+
+
 
 	printf("The top %d words (out of %d) are:\n", nflag, *amount);
 	for (int i = 0; i < temp; ++i){
@@ -228,13 +307,14 @@ char *procWord(char *line){
 		curSpot = line;
 		nullFlag = 0;
 	}
-	if (nullFlag){			/////////////////
-		return NULL;
-	} else if (curSpot[0] == '\0'){
-		return NULL;
-	} ///////////////////////////
 
-	int i = 0;
+        if(nullFlag){
+            return NULL;
+        } else if (curSpot[0] == '\0'){
+            return NULL;
+        }
+        
+        int i = 0;
 	while (isalpha(curSpot[i])){
 		i++;
 		if (curSpot[i] == '\0'){
@@ -303,7 +383,8 @@ int loadFactor(int *amount, int *size){
 	return 0;
 }
 
-HashItem **filterTable(HashItem **temptable, int *size, int *amount){
+HashItem **filterTable(HashItem **temptable, int *size, int *amount, int nflag){
+
 	HashItem **hashTable = NULL;
 	if( NULL==(hashTable=(HashItem**)calloc(*amount, sizeof(HashItem*))) ) { 
 		perror(__FUNCTION__);
