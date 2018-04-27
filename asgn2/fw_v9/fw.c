@@ -80,7 +80,7 @@ HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, in
 
    }
 
-   for (int i = 1; i <= agc; i++){
+   for (int i = 1; i < agc; i++){
 
       if (strcmp(agv[i],"-n") == 0){
          //printf("sscanf: %d\n",sscanf(agv[i+1], "%d", n));
