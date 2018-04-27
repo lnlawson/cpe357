@@ -13,7 +13,7 @@ int j = 0;
 char *buff;
 char *ret;
 int size=0;
-char c;
+int c;
 size=CHUNK;
 if(NULL==(buff=(char*)malloc(size * sizeof(char)))) { 
 	perror(__FUNCTION__);
@@ -27,9 +27,9 @@ for(i=0,c=getc(infile); c!=EOF ;c=getc(infile)) {
 			exit(-1);
 		} 
 	}
-	buff[i++]=c;
+	buff[i++]=(char)c;
 	j = 1;
-	if( c =='\n'){
+	if( (char)c =='\n'){
 		i--;
 		break;
 	}
