@@ -18,68 +18,117 @@ int main(int argc, char const *argv[])
 	int *n = &nAmount;
 
 
-	// if (NULL == (file = fopen(argv[1], "r"))){
-	// 	perror(__FUNCTION__);
-	// 	exit(-1);
-	// }
-
    hashTable = procInput(hashTable, argc, argv, size, amount, n);
-   hashTable = filterTable(hashTable, size, amount);
-   qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
 
+   if (hashTable != NULL){ 
+      hashTable = filterTable(hashTable, size, amount, *n);
+      qsort((void *)hashTable, *amount, sizeof(HashItem *), compFunction);
+   }
    printOutput(hashTable, amount, *n);
-   // printf("done\n");
-	// for (int k=0; k<*amount; ++k){
-	// 		if (hashTable[k]->occur>50){
-	// 		printf("hashTable[%d]: ", k);
-	// 		printf("%s\n", hashTable[k]->word);
-	// 		printf("occur: %d\n", hashTable[k]->occur);
-	// 		}
-	// }
-	hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
-	free(hashTable);
-	// fclose(file);
+
+   hashTable = FreeTable(hashTable, amount);		// changed size to amount after filtering
+   free(hashTable);
+         // fclose(file);
 	// printf("ALL DONE!!!!!!!\n");
-	return 0;
+   return 0;
 }
+
 
 HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n){
-   FILE *file;
+   FILE *file = NULL;
 
-   if(agc == 3 && (strcmp(agv[1], "-n") == 0)){
-      table = procFile(table, stdin, size, amount);
-   }
-   for (int i = 1; i < agc; i++){
+   HashItem **tempTable = table;
 
-      if (strcmp(agv[i],"-n") == 0){
-         i++;
-         sscanf(agv[i], "%d", n);
-
-      } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
-         fprintf(stderr,"\nfw: extra operand %s\n", &agv[i][1]);
-
-      } else{
-         if (NULL == (file = fopen(agv[i], "r"))){
-            perror(__FUNCTION__);
-            exit(-1);
-         }
-         table = procFile(table, file, size, amount);
-      }
-   }
-   fclose(file);
-	return table;
-}
-
-HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount){
-   char *current = readline(file);
-   table = (HashItem**)calloc(*size, sizeof(HashItem*)); 
-	if(table == NULL){
-	   // printf("problem with mallocing table\n");
+   tempTable = (HashItem**)calloc(*size, sizeof(HashItem*)); 
+	if(tempTable == NULL){
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
+	
+   if(agc == 3 && (strcmp(agv[1], "-n") == 0)){
+         if ((sscanf(agv[2], "%d", n)) == 0) {
+            fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[2]);
+            exit(-1);
+         }
+         else{
+            if (stdin == NULL){
+	       perror("Usage");
+	       exit(-1);
+            }
+            else{
+            tempTable = procFile(tempTable, stdin, size, amount, n);
+            return tempTable;
+            }
+         }
+   }
+   if(agc == 1){
+      if (stdin == NULL){
+	       perror("Usage");
+	       exit(-1);
+            }
+      else{
+            tempTable = procFile(tempTable, stdin, size, amount, n);
+            return tempTable;
+      }
+
+   }
+
+
+   for (int i = 1; i < agc; i++){
+
+      if (strcmp(agv[i],"-n") == 0){
+ 
+         if(i+1 == agc){
+            perror("Usage");
+            exit(-1);
+         }
+         
+         else if (sscanf(agv[i+1], "%d", n) == 0) {
+            fprintf(stderr,"Usage: symbol %s is not an integer\n", agv[i+1]);
+            exit(-1);
+         }
+
+         else{
+            i++;
+            sscanf(agv[i], "%d", n);
+         }
+
+      } else if ((agv[i][0] == '-') && (agv[i][1] != 'n')){
+         fprintf(stderr,"Usage: extra operand %s\n", &agv[i][1]);
+         exit(-1);
+
+      } else{
+         if (NULL == (file = fopen(agv[i], "r"))){
+            perror(agv[i]);
+
+            continue;
+ 
+         }
+         tempTable = procFile(tempTable, file, size, amount, n);
+         if (file != NULL){
+            fclose(file);
+         }
+
+      }
+   }
+   return tempTable;
+}
+
+
+HashItem **procFile(HashItem **tabl, FILE *file, int *size, int *amount, int *nflag){
+	HashItem **table = tabl;
+
+   if (file == NULL){
+
+      return table;
+   }
+   char *current = readline(file);
+   if (current == NULL){
+
+      return table;
+   }
+
    while (current != NULL){
-   	// printf("start\n");
       table = procLine(table, current, size, amount);
       free(current);
       current = readline(file);
@@ -130,12 +179,26 @@ void printOutput(HashItem **table, int *amount, int nflag){
 	int digits;
 	int spaces;
 	char *occurColumn;
-	if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
-	perror(__FUNCTION__);
-	exit(-1);
+	int temp;
+        if( NULL==(occurColumn=calloc(9, sizeof(char))) ) { 
+	    perror(__FUNCTION__);
+	    exit(-1);
 	}
+
+        /////////////////////////
+        if(*amount < nflag){
+            temp = *amount;
+        } else if(nflag <= *amount){
+            temp = nflag;
+        }
+        /////////////////////////
+
+
+
+
+
 	printf("The top %d words (out of %d) are:\n", nflag, *amount);
-	for (int i = 0; i < nflag; ++i){
+	for (int i = 0; i < temp; ++i){
 		digits = 0;
 		int tempOccur = table[i]->occur;
 		while(tempOccur != 0)
@@ -221,10 +284,14 @@ char *procWord(char *line){
 		curSpot = line;
 		nullFlag = 0;
 	}
-	if (curSpot[0] == '\0' || nullFlag){
-		return NULL;
-	}
-	int i = 0;
+
+        if(nullFlag){
+            return NULL;
+        } else if (curSpot[0] == '\0'){
+            return NULL;
+        }
+        
+        int i = 0;
 	while (isalpha(curSpot[i])){
 		i++;
 		if (curSpot[i] == '\0'){
@@ -293,7 +360,8 @@ int loadFactor(int *amount, int *size){
 	return 0;
 }
 
-HashItem **filterTable(HashItem **temptable, int *size, int *amount){
+HashItem **filterTable(HashItem **temptable, int *size, int *amount, int nflag){
+
 	HashItem **hashTable = NULL;
 	if( NULL==(hashTable=(HashItem**)calloc(*amount, sizeof(HashItem*))) ) { 
 		perror(__FUNCTION__);
@@ -324,8 +392,10 @@ int compFunction(const void *a, const void *b){
 
 	HashItem *A = (*(HashItem **)a);
 	HashItem *B = (*(HashItem **)b);
-
-	if (B->occur == A->occur){
+        //printf("A: %d\n",A->occur);
+        //printf("B: %d\n",B->occur);
+	if (B->occur 
+              == A->occur){
 		result = strcmp( B->word, A->word );
 	} else{result = (B->occur - A->occur);}
 

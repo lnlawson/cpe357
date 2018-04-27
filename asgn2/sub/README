@@ -1,0 +1,103 @@
+
+
+/////////////////////Logan Lawson(AKA lnlawson) and Angelo De Laurentis(AKA amdelaur) present fw///////////////
+
+
+
+
+
+Our implementation of fw uses a hashtable of a structs we created called "HashItem"s. Our HashItems store an int value
+called "occur". "occur" stores the amount of times a word has occured. Our second value in our HashItem is a char pointe
+called *word that points to a char array that represents the word that the HashItem represents the data for.
+
+our HashItem struct took the form of:
+
+typedef struct hashitem
+{
+	int occur; //the number of times this word has occurred
+	int ascival; //the ascii value of the word
+        char *word; //a string representing the word itself
+
+}HashItem;
+
+
+here are the functions we used to work our implementation:
+
+int hashCode(int asval, int *size);
+
+   This function generates the hashcode for a value and a given size of table.
+
+
+
+int asciiAdd(char *value);
+
+   This function generates the ascii value for a given string.
+
+
+int quadProbing(int index, int inc, int *size);
+
+   We decided to handle our hashing collisions with quadratic probing. This function handles the quadratic probing by taking a table size, 
+   an int index that represents the original index and an int inc that will start as 0 but increase quadratically. 
+   when quadProbing is done it will return the new index.
+
+
+void createItem(HashItem **table, int index, char *word, int asval, int len);
+
+   This function as the name indicates creates a new HashItem in the table at a given index.
+
+
+int cyclingHashTable(HashItem **table, int ind, char *word, int asval, int *size, int *amount, int len, int mode);
+
+   A function that loops and calls quadProbing every loop to handle collisions. 
+
+
+void printOutput(HashItem **table, int *amount, int nflag);
+
+   This funcion handles all the printing and formatting for the output of our function.
+
+
+char *procWord(char *line);
+
+   This is an implementation of the builtin c function strtok() we decided strtok() didn't serve our purposes exactly the way we wanted it to so we built our own.
+
+
+HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n);
+
+   This function handles a bulk of the interaction with the user. Deciding which files to run procFile on and handling user errors.
+
+
+HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount, int *nflag);
+
+   This function takes a file and returns a Hashtable with all the words in that file processed into HashItems.
+
+
+HashItem **procLine(HashItem **table, char *curline, int *size, int *amount);
+
+   This function is a helper to procFile. It processes all of the words in a line from an input and returns a Hashtable with all the words in that file processed into HashItems.
+
+
+HashItem **reHashTable(HashItem **table, int *size, int *amount);
+   
+   When the load factor for our current table has been exceeded we have to rehash into a bigger table. This table takes care of the rehashing process.
+   
+
+HashItem **FreeTable(HashItem **tabl, int *size);
+
+   Since our HashTable is implemented in dynamic memory we have to free the whole thing along with all of the HashItem structs it points too. 
+   So we have this function that loops through our table and frees everything.
+
+
+HashItem **filterTable(HashItem **temptable, int *size, int *amount, int nflag);
+   
+   Since hashing doesn't create a perfectly full table, this function filters out all of the NULL pointers in our HashTable so we are left with a full HashTable that we can sort.
+
+
+int loadFactor(int *amount, int *size);
+
+   This is a helper function that calculates the current load factor of our HashTable.
+
+
+int compFunction(const void *a, const void *b);
+   This function is a comparator that will be fed into our qsort call.
+
+

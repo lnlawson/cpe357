@@ -32,7 +32,7 @@ char *procWord(char *line);
 
 HashItem **procInput(HashItem **table, int agc, char const *agv[], int *size, int *amount, int *n);
 
-HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount);
+HashItem **procFile(HashItem **table, FILE *file, int *size, int *amount, int *nflag);
 
 HashItem **procLine(HashItem **table, char *curline, int *size, int *amount);
 
@@ -40,7 +40,7 @@ HashItem **reHashTable(HashItem **table, int *size, int *amount);
 
 HashItem **FreeTable(HashItem **tabl, int *size);
 
-HashItem **filterTable(HashItem **temptable, int *size, int *amount);
+HashItem **filterTable(HashItem **temptable, int *size, int *amount, int nflag);
 
 int loadFactor(int *amount, int *size);
 
