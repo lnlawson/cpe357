@@ -23,5 +23,6 @@ typedef struct item{
 void initTable(void);
 void fillTable(FILE *file);
 treeNode **buildList(treeNode **list, int *count);
+int compFunction(const void *a, const void *b);
 
 int table[256];

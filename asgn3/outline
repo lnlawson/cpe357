@@ -1,0 +1,7 @@
+Huffman has a few key components. I’ll be using an array of size 256 to store all the frequencies for the letters initially read for the file given by the user. The function will the pull indices and the frequencies from this array to start building the tree nodes. Then the tree nodes are sorted using qsort and a comparator function. 
+
+Nodes on our tree will be represented by a struct that has an int representing the frequency of that node, a char representing the character that the node holds if it’s a leaf, and a right and left subtree node pointer that will be NULL for leaf nodes. 
+
+Once the tree is built we’ll be able to encode all of the letters quickly between files. And develop the headers for each of the encoded files. This is what will make it possible to decode them later.
+
+Once the files are encoded and the bytes are packed. Functions for building a decode tree will be written and the process of encoding will then be reversed. The inputted files will then be returned exactly as they were in the original files given to the encoder. 

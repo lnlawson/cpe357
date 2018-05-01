@@ -5,7 +5,9 @@
 
 int main(int argc, char **argv){
 	FILE *file = NULL;
-	int *count = 0;
+	int countVal = 0;
+	int *count = &countVal;
+
 	treeNode **treeList = NULL;
 	initTable();
 	if (NULL == (file = fopen(argv[1], "r"))){
@@ -14,6 +16,7 @@ int main(int argc, char **argv){
 	else{
 		fillTable(file);
 		treeList = buildList(treeList, count);
+		qsort(treeList, *count, sizeof(treeNode*), compFunction);
 	}
 
 	for (int i = 0; i < *count; i++){
@@ -49,7 +52,6 @@ treeNode **buildList(treeNode **list, int *count){
 	int buffSize = 40;
 	treeNode **treeList = list;
 	treeNode *tempNode = NULL;
-
 	if( NULL==(treeList=realloc(treeList, buffSize * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
@@ -81,6 +83,47 @@ treeNode **buildList(treeNode **list, int *count){
 	}
 	return treeList;
 }
+
+treeNode **buildTree(treeNode **list, int *count){
+	int tempCount = *count;
+	treeNode **tempA = NULL;
+	treeNode **tempB = NULL;
+	char topChar;
+	int sum;
+	while (tempCount != 0){
+		tempA = list[0];
+		tempB = list[1];
+		if( NULL==(tempNode=malloc(sizeof(treeNode))) ) { 
+	   	perror(__FUNCTION__);
+	   	exit(-1);
+		}
+		//////////
+	}
+}
+
+
+int compFunction(const void *a, const void *b){
+	int result;
+
+	if (a == NULL && b == NULL){
+		return 0;
+	} else if (a != NULL && b == NULL){
+		return -1;
+	} else if (a == NULL && b != NULL){
+		return 1;
+	}
+
+	treeNode *A = (*(treeNode **)a);
+	treeNode *B = (*(treeNode **)b);
+        //printf("A: %d\n",A->occur);
+        //printf("B: %d\n",B->occur);
+	if (B->val == A->val){
+		result = A->character - B->character;
+	} else{result = (A->val - B->val);}
+
+	return result;
+}
+
 
 
 
