@@ -17,11 +17,15 @@ int main(int argc, char **argv){
 		fillTable(file);
 		treeList = buildList(treeList, count);
 		qsort(treeList, *count, sizeof(treeNode*), compFunction);
+		for (int i = 0; i < *count; i++){
+		printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
+		}
+		treeList = buildTree(treeList, count);
 	}
 
-	for (int i = 0; i < *count; i++){
-		printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
-	}
+	// for (int i = 0; i < 1; i++){
+	// 	printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
+	// }
 
 	fclose(file);
 	//FreeTable(table, 127);
@@ -86,10 +90,11 @@ treeNode **buildList(treeNode **list, int *count){
 
 treeNode **buildTree(treeNode **list, int *count){
 	int tempCount = *count;
-	treeNode **tempA = NULL;
-	treeNode **tempB = NULL;
+	treeNode *tempNode = NULL;
+	treeNode *tempA = NULL;
+	treeNode *tempB = NULL;
 	char topChar;
-	int sum;
+	// int sum;
 	while (tempCount != 0){
 		tempA = list[0];
 		tempB = list[1];
@@ -97,8 +102,24 @@ treeNode **buildTree(treeNode **list, int *count){
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 		}
-		//////////
+		tempNode->val = (tempA->val + tempB->val);
+		printf("sum: %d\n", tempNode->val);
+		if ((tempA->character - tempB->character) < 0){
+			topChar = tempA->character;
+		} else { topChar = tempB->character;}
+		tempNode->character = topChar;
+		tempNode->left = tempA;
+		tempNode->right = tempB;
+		tempCount -= 1;
+		list[0] = tempNode;
+		list[1] = NULL;
+		qsort(list, *count, sizeof(treeNode*), compFunction);
+		for (int i = 0; i < tempCount; i++){
+		printf("table[%d] : occur %d character %c\n", i, list[i]->val, list[i]->character);
+		}
 	}
+	// list = realloc(list, sizeof(treeNode*));
+	return list;
 }
 
 
