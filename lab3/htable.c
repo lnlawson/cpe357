@@ -47,10 +47,10 @@ void fillTable(FILE *file){
 treeNode **buildList(treeNode **list, int *count){
 	// int count = 0;
 	int buffSize = 40;
-	// treeNode **treeList = NULL;
+	treeNode **treeList = list;
 	treeNode *tempNode = NULL;
 
-	if( NULL==(list=realloc(list, buffSize * sizeof(treeNode*))) ) { 
+	if( NULL==(treeList=realloc(treeList, buffSize * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
@@ -60,26 +60,26 @@ treeNode **buildList(treeNode **list, int *count){
 	   		perror(__FUNCTION__);
 	   		exit(-1);
 			}
-			list[*count] = tempNode;
-			list[*count]->character = (char)i;
-			list[*count]->val = table[i];
-			list[*count]->left = NULL;
-			list[*count]->right = NULL;
+			treeList[*count] = tempNode;
+			treeList[*count]->character = (char)i;
+			treeList[*count]->val = table[i];
+			treeList[*count]->left = NULL;
+			treeList[*count]->right = NULL;
 			*count += 1;
 			if ((*count) == buffSize){
 				buffSize *=2;
-				if( NULL==(list=realloc(list, buffSize * sizeof(treeNode*))) ) { 
+				if( NULL==(treeList=realloc(treeList, buffSize * sizeof(treeNode*))) ) { 
 	   		perror(__FUNCTION__);
 	   		exit(-1);
 				}
 			}
 		}
 	}
-	if( NULL==(list=realloc(list, *count * sizeof(treeNode*))) ) { 
+	if( NULL==(treeList=realloc(treeList, *count * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
-	return list;
+	return treeList;
 }
 
 
