@@ -23,9 +23,9 @@ int main(int argc, char **argv){
 		treeList = buildTree(treeList, count);
 	}
 
-	// for (int i = 0; i < 1; i++){
-	// 	printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
-	// }
+	for (int i = 0; i < 1; i++){
+		printf("table[%d] : occur %d character %c left %c right %c\n", i, treeList[i]->val, treeList[i]->character, treeList[i]->left->character,
+			 treeList[i]->right->character);	}
 
 	fclose(file);
 	//FreeTable(table, 127);
@@ -89,6 +89,7 @@ treeNode **buildList(treeNode **list, int *count){
 }
 
 treeNode **buildTree(treeNode **list, int *count){
+	treeNode **treeList = list;
 	int tempCount = *count;
 	treeNode *tempNode = NULL;
 	treeNode *tempA = NULL;
@@ -96,8 +97,8 @@ treeNode **buildTree(treeNode **list, int *count){
 	char topChar;
 	// int sum;
 	while (tempCount != 0){
-		tempA = list[0];
-		tempB = list[1];
+		tempA = treeList[0];
+		tempB = treeList[1];
 		if( NULL==(tempNode=malloc(sizeof(treeNode))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
@@ -111,31 +112,32 @@ treeNode **buildTree(treeNode **list, int *count){
 		tempNode->left = tempA;
 		tempNode->right = tempB;
 		tempCount -= 1;
-		list[0] = tempNode;
-		list[1] = NULL;
-		qsort(list, *count, sizeof(treeNode*), compFunction);
+		treeList[0] = tempNode;
+		treeList[1] = NULL;
+		qsort(treeList, *count, sizeof(treeNode*), compFunction);
 		for (int i = 0; i < tempCount; i++){
-		printf("table[%d] : occur %d character %c\n", i, list[i]->val, list[i]->character);
+		printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
 		}
 	}
 	// list = realloc(list, sizeof(treeNode*));
-	return list;
+	return treeList;
 }
 
 
 int compFunction(const void *a, const void *b){
 	int result;
 
-	if (a == NULL && b == NULL){
+	treeNode *A = (*(treeNode **)a);
+	treeNode *B = (*(treeNode **)b);
+
+	if (A == NULL && B == NULL){
 		return 0;
-	} else if (a != NULL && b == NULL){
+	} else if (A != NULL && B == NULL){
 		return -1;
-	} else if (a == NULL && b != NULL){
+	} else if (A == NULL && B != NULL){
 		return 1;
 	}
 
-	treeNode *A = (*(treeNode **)a);
-	treeNode *B = (*(treeNode **)b);
         //printf("A: %d\n",A->occur);
         //printf("B: %d\n",B->occur);
 	if (B->val == A->val){
