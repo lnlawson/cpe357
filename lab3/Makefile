@@ -1,4 +1,4 @@
-TARGET   = fw
+TARGET   = a.out
 CC       = gcc
 CCFLAGS  = -pedantic -Wall -Werror -ansi -g -std=c99
 LDFLAGS  = -lm
