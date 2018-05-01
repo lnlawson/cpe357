@@ -1,6 +1,6 @@
 TARGET   = fw
 CC       = gcc
-CCFLAGS  = -pedantic -Wall -Werror -ansi -g
+CCFLAGS  = -pedantic -Wall -Werror -ansi -g -std=c99
 LDFLAGS  = -lm
 SOURCES  = $(wildcard *.c)
 INCLUDES = $(wildcard *.h)
