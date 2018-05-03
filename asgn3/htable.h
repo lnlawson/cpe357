@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct tree treeNode;
 
@@ -25,7 +26,7 @@ typedef struct item{
 
 typedef struct path
 {
-	char *path;
+	char path[256];
 	int len;
 }PathCode;
 
@@ -39,6 +40,8 @@ treeNode **buildTree(treeNode **list, int *count);
 PathCode **encodeTable(treeNode *list);
 char *getPath(treeNode *node, char character, char *path, int index);
 void writeHeader(FILE *outfile, FILE *infile, int *count);
+void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable);
+int calcBinInt(char *byte);
 
 int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);

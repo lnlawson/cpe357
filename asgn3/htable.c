@@ -34,6 +34,7 @@ int main(int argc, char **argv){
 		treeList = buildTree(treeList, count);
 		codeTable = encodeTable(treeList[0]);
 		writeHeader(outfile, infile, count);
+		writeBits(outfile, infile, codeTable);
 	}
 
 	// for (int i = 0; i < 1; i++){
@@ -158,12 +159,8 @@ PathCode  **encodeTable(treeNode *list){
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
 			printf("0x%02x: %s\n", i, codeTable[i]->path);
-			printf("hi\n");
-		} else {
-			codeTable[i] = NULL;
-		}
+		} 
 	}
-
 	return codeTable;
 }
 
@@ -208,25 +205,67 @@ void writeHeader(FILE *outfile, FILE *infile, int *count){
 	}
 }
 
-// void writeBits(FILE *outfile, FILE *infile, char **codeTable){
-// 	int buffSize = 40;
-// 	int bits = 0
-// 	char *bitBuffer = NULL;
-// 	if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
-// 	   perror(__FUNCTION__);
-// 	   exit(-1);
-// 	}
-// 	int temp = getc(infile);
-// 	while (temp != EOF){
-// 		if (temp < 0 || temp > 255){
-// 			temp = getc(infile);
-// 			continue;
-// 		}
-// 		codeTable[temp] += 1;
-// 		temp = getc(infile);
-// 	}
+void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable){
+	int buffSize = 40;
+	int bits = 0;
+	int totalBits = 0;
+	char *bitBuffer = NULL;
+	int tempByte; 
+	int byteCount = 0;
 
-// }
+	if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
+	   perror(__FUNCTION__);
+	   exit(-1);
+	}
+	int temp = getc(infile);
+	while (temp != EOF){
+		if (temp < 0 || temp > 255){
+			temp = getc(infile);
+			continue;
+		}
+		if (bits + codeTable[temp]->len > buffSize){
+			buffSize *= 2;
+			if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
+			   perror(__FUNCTION__);
+			   exit(-1);
+			}
+		}
+		strncpy((bitBuffer+bits), codeTable[temp]->path, codeTable[temp]->len);
+		bits += codeTable[temp]->len;
+		if ((bits % 8) == 0){
+			bitBuffer[bits] = '\0';
+			printf("buffer: %s\n", bitBuffer);
+			printf("bits: %d\n", bits);
+			byteCount = bits / 8;
+			printf("byteCount: %d\n", byteCount);
+			for (int i = 0; i < byteCount; ++i){
+				tempByte = calcBinInt((bitBuffer + (i * 8)));
+				printf("tempByte: %d\n", tempByte);
+				if (0 == (fwrite(&tempByte, 1, 1, outfile))){
+					perror(__FUNCTION__);
+				}
+			}
+			totalBits += bits;
+			bits = 0;
+		}
+
+		temp = getc(infile);
+	}
+
+	// printf("%d\n", bits);
+
+}
+
+int calcBinInt(char *byte){
+	int result = 0;
+	for (int i = -7, j = 0; j < 8; ++i, ++j){
+		if (byte[j] == '1'){
+			printf("hi\n");
+			result += pow(2, (i * -1));
+		}
+	}
+	return result;
+}
 
 int compFunction1(const void *a, const void *b){
 	int result;
