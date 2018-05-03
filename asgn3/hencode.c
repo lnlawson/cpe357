@@ -36,7 +36,8 @@ int main(int argc, char **argv){
 		writeHeader(outfile, infile, count);
 		writeBits(outfile, infile, codeTable);
 		freeTree(treeList[0]);
-		FreeTable(codeTable);
+		free(treeList);
+		freeTable(codeTable);
 	}
 
 	// for (int i = 0; i < 1; i++){
@@ -281,6 +282,13 @@ int calcBinInt(char *byte){
 	return result;
 }
 
+void FreeTree(treeNode *node){
+	while((*node)->left != NULL && (*node)->right != NULL){
+		freeTree(*node);
+	}
+	free(*node);
+}
+
 int freeTree(treeNode *node){
 	int p = 0;
 	if (node->left == NULL && node->right == NULL){
@@ -290,24 +298,17 @@ int freeTree(treeNode *node){
 	if (node->left != NULL){
 		p = freeTree(node->left);
 		if (p == 1){
-			node->left->left = NULL;
-			node->left->right = NULL;
 			return p;
 		}
 	}	
 
 	if (node->right != NULL) {
 		p = freeTree(node->right);
-		if (p == 1){
-			node->right->left = NULL;
-			node->right->right = NULL;
-			return p;
-		}
 	}
 	return 0;
 }
 
-void FreeTable(PathCode **codeTable){
+void freeTable(PathCode **codeTable){
 	for (int i = 0; i < 256; ++i){
 		if (codeTable[i]!= NULL){
 			free(codeTable[i]);
