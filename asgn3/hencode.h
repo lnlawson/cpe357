@@ -43,6 +43,8 @@ void writeHeader(FILE *outfile, FILE *infile, int *count);
 void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable);
 int calcBinInt(char *byte);
 
+int freeTree(treeNode *node);
+
 int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);
 
