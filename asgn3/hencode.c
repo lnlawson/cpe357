@@ -283,10 +283,10 @@ int calcBinInt(char *byte){
 }
 
 void FreeTree(treeNode *node){
-	while((*node)->left != NULL && (*node)->right != NULL){
-		freeTree(*node);
+	while((node)->left != NULL && (node)->right != NULL){
+		freeTree(node);
 	}
-	free(*node);
+	free(node);
 }
 
 int freeTree(treeNode *node){
