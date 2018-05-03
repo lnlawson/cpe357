@@ -1,7 +1,7 @@
 /*Name: Logan Lawson
 **Assignment 3 : hencode*/
 
-#include "htable.h"
+#include "hencode.h"
 
 
 int main(int argc, char **argv){
@@ -283,13 +283,13 @@ int calcBinInt(char *byte){
 }
 
 int freeTree(treeNode *node){
-	int *p;
+	int p;
 	if (node->left == NULL && node->right == NULL){
-		free(node)
+		free(node);
 		return 0;
 	}
 	if (node->left != NULL){
-		p = getPath(node->left);
+		p = freeTree(node->left);
 		if (p != 1){
 			node->left->left = NULL;
 			node->left->right = NULL;
@@ -298,7 +298,7 @@ int freeTree(treeNode *node){
 	}	
 
 	if (node->right != NULL) {
-		p = getPath(node->right);
+		p = freeTree(node->right);
 		if (p != 1){
 			node->right->left = NULL;
 			node->right->right = NULL;

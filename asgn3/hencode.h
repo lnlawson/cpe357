@@ -44,6 +44,8 @@ void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable);
 int calcBinInt(char *byte);
 
 int freeTree(treeNode *node);
+void FreeTable(PathCode **codeTable);
+
 
 int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);
