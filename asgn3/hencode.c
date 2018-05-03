@@ -180,7 +180,6 @@ char *getPath(treeNode *node, char character, char *path, int index){
 			return p;
 		}
 	}	
-
 	path[index] = '1';
 	if (node->right != NULL) {
 			return getPath(node->right, character, path, index + 1);
@@ -283,14 +282,14 @@ int calcBinInt(char *byte){
 }
 
 int freeTree(treeNode *node){
-	int p;
+	int p = 0;
 	if (node->left == NULL && node->right == NULL){
 		free(node);
-		return 0;
+		return 1;
 	}
 	if (node->left != NULL){
 		p = freeTree(node->left);
-		if (p != 1){
+		if (p == 1){
 			node->left->left = NULL;
 			node->left->right = NULL;
 			return p;
@@ -299,13 +298,13 @@ int freeTree(treeNode *node){
 
 	if (node->right != NULL) {
 		p = freeTree(node->right);
-		if (p != 1){
+		if (p == 1){
 			node->right->left = NULL;
 			node->right->right = NULL;
 			return p;
 		}
 	}
-	return 1;
+	return 0;
 }
 
 void FreeTable(PathCode **codeTable){
