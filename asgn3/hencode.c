@@ -1,5 +1,5 @@
 /*Name: Logan Lawson
-**Assignment 3 : huffman*/
+**Assignment 3 : hencode*/
 
 #include "htable.h"
 
