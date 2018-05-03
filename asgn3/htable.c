@@ -1,22 +1,31 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*Name: Logan Lawson
+**Assignment 3 : huffman*/
+
 #include "htable.h"
 
 
 int main(int argc, char **argv){
-	FILE *file = NULL;
+	FILE *infile = NULL;
+	FILE *outfile = NULL;
 	int countVal = 0;
 	int *count = &countVal;
 
 	treeNode **treeList = NULL;
-	char **codeTable = NULL;
+	PathCode **codeTable = NULL;
 
 	initTable();
-	if (NULL == (file = fopen(argv[1], "r"))){
-		perror(argv[1]);
+	if (argc < 3){
+		outfile = stdout;
+
+	} else if (NULL == (outfile = fopen(argv[2], "w"))){
+		perror(argv[2]);
 	}
-	else{
-		fillTable(file);
+	if (NULL == (infile = fopen(argv[1], "r"))){
+		perror(argv[1]);
+		exit(-1);
+
+	} else{
+		fillTable(infile);
 		treeList = buildList(treeList, count);
 		qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 		// for (int i = 0; i < *count; i++){
@@ -24,6 +33,7 @@ int main(int argc, char **argv){
 		// }
 		treeList = buildTree(treeList, count);
 		codeTable = encodeTable(treeList[0]);
+		writeHeader(outfile, infile, count);
 	}
 
 	// for (int i = 0; i < 1; i++){
@@ -33,11 +43,11 @@ int main(int argc, char **argv){
 
 	for (int i = 0; i < 256; i++){
 		if (codeTable[i] != NULL){
-			printf("table[%d] : huffVal %s character %c\n", i, codeTable[i], i);	
+			printf("table[%d] : huffVal %s character %c occur %d\n", i, codeTable[i]->path, i, table[i]);	
 			}
 		}
 
-	fclose(file);
+	fclose(infile);
 	//FreeTable(table, 127);
 }
 
@@ -49,15 +59,15 @@ void initTable(void){
 }
 
 
-void fillTable(FILE *file){
-   int temp = getc(file);
+void fillTable(FILE *infile){
+   int temp = getc(infile);
 	while (temp != EOF){
 		if (temp < 0 || temp > 255){
-			temp = getc(file);
+			temp = getc(infile);
 			continue;
 		}
 		table[temp] += 1;
-		temp = getc(file);
+		temp = getc(infile);
 	}
 }
 
@@ -137,13 +147,18 @@ treeNode **buildTree(treeNode **list, int *count){
 	return treeList;
 }
 
-char  **encodeTable(treeNode *list){
-	char **codeTable = calloc( 256, sizeof(char*));
+PathCode  **encodeTable(treeNode *list){
+	PathCode **codeTable = calloc( 256, sizeof(PathCode*));
+	char *tempCode = NULL;
+	tempCode = malloc(256 * sizeof(char));
 	for (int i = 0; i < 256; ++i){
 		if (table[i] > 0){
-			codeTable[i] = malloc(256 * sizeof(char*));
-			codeTable[i] = getPath(list, i, codeTable[i], 0);
-			printf("0x%02x: %s\n", i, codeTable[i]);
+			codeTable[i] = malloc(sizeof(PathCode));
+			tempCode = getPath(list, i, tempCode, 0);
+			strcpy(codeTable[i]->path, tempCode);
+			codeTable[i]->len = strlen(codeTable[i]->path);
+			printf("0x%02x: %s\n", i, codeTable[i]->path);
+			printf("hi\n");
 		} else {
 			codeTable[i] = NULL;
 		}
@@ -174,6 +189,44 @@ char *getPath(treeNode *node, char character, char *path, int index){
 	return NULL;
 }
 
+void writeHeader(FILE *outfile, FILE *infile, int *count){
+
+	fseek(infile, 0, SEEK_SET);
+
+	if (0 == (fwrite(count, 4, 1, outfile))){
+		perror(__FUNCTION__);
+	}
+	for (int i = 0; i < 256; ++i){
+		if (table[i] > 0){
+			if (0 == (fwrite(&i, 1, 1, outfile))){
+			perror(__FUNCTION__);
+			}
+			if (0 == (fwrite((table + i), 4, 1, outfile))){
+			perror(__FUNCTION__);
+			}
+		}
+	}
+}
+
+// void writeBits(FILE *outfile, FILE *infile, char **codeTable){
+// 	int buffSize = 40;
+// 	int bits = 0
+// 	char *bitBuffer = NULL;
+// 	if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
+// 	   perror(__FUNCTION__);
+// 	   exit(-1);
+// 	}
+// 	int temp = getc(infile);
+// 	while (temp != EOF){
+// 		if (temp < 0 || temp > 255){
+// 			temp = getc(infile);
+// 			continue;
+// 		}
+// 		codeTable[temp] += 1;
+// 		temp = getc(infile);
+// 	}
+
+// }
 
 int compFunction1(const void *a, const void *b){
 	int result;
@@ -224,168 +277,3 @@ int compFunction2(const void *a, const void *b){
 
 
 // aaaabbbbccddiiLLk
-
-//////////////////////////////////LINKED LIST/////////////////////////////////
-
-
-
-/*Item *createItem(int val, int occur){
-	Item *new_i = malloc(sizeof(Item*));
-	(new_i)->val = val;
-	(new_i)->occur = occur;
-	return new_i;
-}*/
-
-
-
-
-
-
-/////////////////////////////////FROM STATIC TABLE IMPLEMENTATION
-
-/*int main(int argc, char **argv){
-	FILE *file = NULL;
-	List *list = NULL;
-	initTable();
-	if (NULL == (file = fopen(argv[1], "r"))){
-		perror(argv[1]);
-	}
-	else{
-		fillTable(file);
-	}
-
-	for (int i = 0; i < 127; i++){
-		printf("table[%d] : %d\n", i, table[i]);
-	}
-
-	list = buildLList(list);
-
-	Node *temp = list->head;
-	Item *tempi = NULL;
-	while (temp->next != NULL){
-		tempi = (Item*)temp->item;
-		printf("val: %d, occur: %d\n", tempi->val, tempi->occur);
-		temp = temp->next;
-	}
-
-	fclose(file);
-	//FreeTable(table, 127);
-}*/
-
-
-
-
-
-
-/*List *buildLList(List *list){
-	for (int i = 0; i < 127; i++){
-		if(table[i] != 0){
-		     list = insertNode(list, createItem(i, table[i]));
-		}
-	}
-        return list;
-}*/
-
-
-
-/*List *insertNode(List *list, Item *item){
-	Node *curr = NULL;
-	Node *new_n = malloc(sizeof(Node*));
-        new_n->item = item;
-	new_n->next = NULL;
-	if (list == NULL){
-		list->head = new_n;
-	}
-	else{
-		curr = list->head;
-		while (curr->next != NULL){
-			if(((curr->next)->item)->occur > item->occur){
-				new_n->next = curr->next;
-				curr->next = new_n;
-			}
-			curr = curr->next;
-		}
-	}
-	return list;
-}*/
-
-
-
-
-/*int Comparator(const void *p, const void *q){
-	return (int)(*p) - (int)(*q);
-}*/
-
-
-
-
-/*int Comparator(const void *a, const void *b){
-	int result;
-
-	if (a == NULL && b == NULL){
-		return 0;
-	} else if (a != NULL && b == NULL){
-		return -1;
-	} else if (a == NULL && b != NULL){
-		return 1;
-	}
-
-	TableItem *A = (*(TableItem **)a);
-	TableItem *B = (*(TableItem **)b);
-        //printf("A: %d\n",A->occur);
-        //printf("B: %d\n",B->occur);
-	if (B->occur == A->occur){
-		result = B->val - -A->val ;
-	} 
-
-	else{result = (B->occur - A->occur);}
-
-	return result;
-}
-
-
-
-
-//Function for filling the table with letter occurences
-void fillTable(FILE *file, TableItem **table){
-	table = (TableItem**)(calloc(127, sizeof(TableItem*)));
-	if(table == NULL){
-		printf("Failed Calloc in fillTable\n");
-		perror(__FUNCTION__);
-		exit(-1);
-	}
-	temp = getc(file);
-	while (temp != EOF){
-		if (table[int(temp)] != NULL){
-			table[(int)temp]->occur += 1;
-		}
-		else{
-			createItem(table, int(temp));
-		}
-		temp = getc(file);
-	}
-}
-
-void createItem(Tableitem **table, int val){
-		table[val] = malloc(sizeof(TableItem));
-		if (table[val] == NULL){
-			printf("Failed Malloc in createItem\n");
-			perror(__FUNCTION__);
-			exit(-1);	
-		}
-		else{
-			(table[val])->val = val;
-			(table[val])->occur = 1;
-			return;
-		}
-}
-
-
-void FreeTable(TableItem **table, int size){
-	for (int i = 0; i < size; i++){
-		free(table[i]);
-	}
-}
-*/
-
-

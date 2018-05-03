@@ -1,6 +1,11 @@
+/*Name: Logan Lawson
+**Assignment 3 : huffman*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdint.h>
+#include <string.h>
 
 typedef struct tree treeNode;
 
@@ -18,6 +23,12 @@ typedef struct item{
 	int occur;
 }Item;
 
+typedef struct path
+{
+	char *path;
+	int len;
+}PathCode;
+
 
 
 //FUNCTIONS:
@@ -25,8 +36,10 @@ void initTable(void);
 void fillTable(FILE *file);
 treeNode **buildList(treeNode **list, int *count);
 treeNode **buildTree(treeNode **list, int *count);
-char  **encodeTable(treeNode *list);
+PathCode **encodeTable(treeNode *list);
 char *getPath(treeNode *node, char character, char *path, int index);
+void writeHeader(FILE *outfile, FILE *infile, int *count);
+
 int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);
 
