@@ -52,6 +52,7 @@ int main(int argc, char **argv){
 	// 	}
 
 	fclose(infile);
+	fclose(outfile);
 	//FreeTable(table, 127);
 }
 
