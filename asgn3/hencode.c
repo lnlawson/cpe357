@@ -285,7 +285,7 @@ int calcBinInt(char *byte){
 
 void freeTree(treeNode *node){
 	if (node != NULL){
-		if(node->left != NULL || node->right != NULL){
+		if(node->left == NULL && node->right == NULL){
 			free(node);
 
 		} else {
