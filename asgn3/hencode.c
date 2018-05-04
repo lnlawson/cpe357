@@ -164,6 +164,7 @@ PathCode  **encodeTable(treeNode *list){
 			// printf("0x%02x: %s\n", i, codeTable[i]->path);
 		} 
 	}
+	free(tempCode);
 	return codeTable;
 }
 
