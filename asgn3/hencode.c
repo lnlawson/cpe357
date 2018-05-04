@@ -35,8 +35,8 @@ int main(int argc, char **argv){
 		codeTable = encodeTable(treeList[0]);
 		writeHeader(outfile, infile, count);
 		writeBits(outfile, infile, codeTable);
-		freeTree(treeList[0]);
-		free(treeList);
+		// freeTree(treeList[0]);
+		// free(treeList);
 		freeTable(codeTable);
 	}
 
