@@ -162,7 +162,8 @@ PathCode  **encodeTable(treeNode *list){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			// printf("0x%02x: %s\n", i, codeTable[i]->path);
+			
+			printf("0x%02x: %s\n", i, codeTable[i]->path);
 		} 
 	}
 	free(tempCode);

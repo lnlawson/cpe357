@@ -1,7 +1,7 @@
 /*Name: Logan Lawson
 **Assignment 3 : hencode*/
 
-#include "hencode.h"
+#include "hencode_f.h"
 
 
 int main(int argc, char **argv){
