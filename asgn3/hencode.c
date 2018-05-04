@@ -282,31 +282,45 @@ int calcBinInt(char *byte){
 	return result;
 }
 
-void FreeTree(treeNode *node){
-	while((node)->left != NULL && (node)->right != NULL){
-		freeTree(node);
-	}
-	free(node);
-}
 
-int freeTree(treeNode *node){
-	int p = 0;
-	if (node->left == NULL && node->right == NULL){
-		free(node);
-		return 1;
-	}
-	if (node->left != NULL){
-		p = freeTree(node->left);
-		if (p == 1){
-			return p;
+void freeTree(treeNode *node){
+	if (node != NULL){
+		if(node->left != NULL && node->right != NULL){
+			free(node);
+
+		} else {
+			freeTree(node->left);
+			freeTree(node->right);
+			free(node);
 		}
-	}	
-
-	if (node->right != NULL) {
-		p = freeTree(node->right);
 	}
-	return 0;
 }
+
+// void FreeTree(treeNode *node){
+// 	while((node)->left != NULL && (node)->right != NULL){
+// 		freeTree(node);
+// 	}
+// 	free(node);
+// }
+
+// int freeTree(treeNode *node){
+// 	int p = 0;
+// 	if (node->left == NULL && node->right == NULL){
+// 		free(node);
+// 		return 1;
+// 	}
+// 	if (node->left != NULL){
+// 		p = freeTree(node->left);
+// 		if (p == 1){
+// 			return p;
+// 		}
+// 	}	
+
+// 	if (node->right != NULL) {
+// 		p = freeTree(node->right);
+// 	}
+// 	return 0;
+// }
 
 void freeTable(PathCode **codeTable){
 	for (int i = 0; i < 256; ++i){
