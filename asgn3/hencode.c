@@ -67,12 +67,12 @@ void fillTable(int infile){
    char *temp = NULL;
    int chRead;
    int c;
-   if( NULL==(temp=malloc(1000 * sizeof(char))) ) { 
+   if( NULL==(temp=malloc(4000 * sizeof(char))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 		}
 
-	while ( (chRead = read(infile, temp, 1000))  > 0){
+	while ( (chRead = read(infile, temp, 4000))  > 0){
 		for (int i = 0; i < chRead; ++i){
 			c = temp[i];
 			if (c < 0 || c > 255){
@@ -80,7 +80,7 @@ void fillTable(int infile){
 			}
 			table[c] += 1;
 		}
-		chRead = read(infile, temp, 1000);
+		chRead = read(infile, temp, 4000);
 	}
 	free(temp);
 }

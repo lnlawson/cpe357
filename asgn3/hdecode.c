@@ -162,7 +162,7 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 						}
 						decodedCharsCount = 0;
 					}
-					if ((total + k + 1) == *totalbits){
+					if ((total + k) == *totalbits){
 						// printf("writing\n");
 						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 						perror(__FUNCTION__);
