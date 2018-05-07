@@ -27,6 +27,10 @@ int main(int argc, char **argv){
 	} else{
 		fillTable(infile);
 		treeList = buildList(treeList, count);
+		if (*count == 0){
+			writeHeader(outfile, infile, count);
+			return 0;
+		}
 		qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 		// for (int i = 0; i < *count; i++){
 		// // printf("table[%d] : occur %d character %c\n", i, treeList[i]->val, treeList[i]->character);
@@ -34,9 +38,6 @@ int main(int argc, char **argv){
 		treeList = buildTree(treeList, count);
 		codeTable = encodeTable(treeList[0]);
 		writeHeader(outfile, infile, count);
-		if (*count == 0){
-			return 0;
-		}
 		writeBits(outfile, infile, codeTable);
 		freeTree(treeList[0]);
 		free(treeList);
@@ -119,6 +120,10 @@ treeNode **buildList(treeNode **list, int *count){
 			}
 		}
 	}
+	if (*count == 0){
+		return treeList;
+	}
+
 	if( NULL==(treeList=realloc(treeList, *count * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
