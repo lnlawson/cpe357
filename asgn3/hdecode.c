@@ -54,7 +54,8 @@ int main(int argc, char **argv){
 	free(treeList);
 	freeTable(codeTable);
 
-
+	close(infile);
+	close(outfile);
 	// for (int i = 0; i < 256; i++){
 	// 	if (table[i] > 0){
 	// 		printf("table[%d] : occur %d character %c\n", i, table[i], i);
