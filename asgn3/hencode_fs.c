@@ -1,12 +1,12 @@
 /*Name: Logan Lawson
 **Assignment 3 : hencode*/
 
-#include "hencode_f.h"
+#include "hencode.h"
 
 
 int main(int argc, char **argv){
-	int infile = 0;
-	int outfile = 0;
+	FILE *infile = NULL;
+	FILE *outfile = NULL;
 	int countVal = 0;
 	int *count = &countVal;
 
@@ -14,13 +14,18 @@ int main(int argc, char **argv){
 	PathCode **codeTable = NULL;
 
 	initTable();
-	if (argc < 3){
+	
+	if (argc > 3){
+		perror("usage");
+		exit(-1);
+
+	} else if (argc < 3){
 		outfile = stdout;
 
-	} else if (0 == (outfile = open(argv[2], O_RDWR))){
+	} else if (NULL == (outfile = fopen(argv[2], "w"))){
 		perror(argv[2]);
 	}
-	if (0 == (infile = open(argv[1], O_RDONLY))){
+	if (NULL == (infile = fopen(argv[1], "r"))){
 		perror(argv[1]);
 		exit(-1);
 
@@ -51,9 +56,8 @@ int main(int argc, char **argv){
 	// 		}
 	// 	}
 
-	close(infile);
-	close(outfile);
-	//FreeTable(table, 127);
+	fclose(infile);
+	fclose(outfile);
 }
 
 //Function for initializing the whole table to 0s
@@ -63,7 +67,7 @@ void initTable(void){
 	}
 }
 
-void fillTable(int infile){
+void fillTable(FILE *infile){
    int temp = getc(infile);
 	while (temp != EOF){
 		if (temp < 0 || temp > 255){
@@ -161,6 +165,7 @@ PathCode  **encodeTable(treeNode *list){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
+
 			printf("0x%02x: %s\n", i, codeTable[i]->path);
 		} 
 	}
@@ -189,29 +194,26 @@ char *getPath(treeNode *node, char character, char *path, int index){
 	return NULL;
 }
 
-void writeHeader(int outfile, int infile, int *count){
+void writeHeader(FILE *outfile, FILE *infile, int *count){
 
-	// lseek(infile, 0, SEEK_SET);
-	if (0 > (lseek(infile, 0, SEEK_SET))){
-		perror(__FUNCTION__);
-	}
+	fseek(infile, 0, SEEK_SET);
 
-	if (0 == (write(outfile, count, 4))){
+	if (0 == (fwrite(count, 4, 1, outfile))){
 		perror(__FUNCTION__);
 	}
 	for (int i = 0; i < 256; ++i){
 		if (table[i] > 0){
-			if (0 == (write(outfile, &i, 1))){
+			if (0 == (fwrite(&i, 1, 1, outfile))){
 			perror(__FUNCTION__);
 			}
-			if (0 == (write(outfile, (table + i), 4))){
+			if (0 == (fwrite((table + i), 4, 1, outfile))){
 			perror(__FUNCTION__);
 			}
 		}
 	}
 }
 
-void writeBits(int outfile, int infile, PathCode **codeTable){
+void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable){
 	int buffSize = 40;
 	int bits = 0;
 	int totalBits = 0;
@@ -247,7 +249,7 @@ void writeBits(int outfile, int infile, PathCode **codeTable){
 			for (int i = 0; i < byteCount; ++i){
 				tempByte = calcBinInt((bitBuffer + (i * 8)));
 				// printf("tempByte: %d\n", tempByte);
-				if (0 == (write(outfile, &tempByte, 1))){
+				if (0 == (fwrite(&tempByte, 1, 1, outfile))){
 					perror(__FUNCTION__);
 				}
 			}
@@ -268,7 +270,7 @@ void writeBits(int outfile, int infile, PathCode **codeTable){
 		// printf("%s\n", bitBuffer);
 		tempByte = calcBinInt(bitBuffer);
 		// printf("tempByte: %d\n", tempByte);
-		if (0 == (write(outfile, &tempByte, 1))){
+		if (0 == (fwrite(&tempByte, 1, 1, outfile))){
 			perror(__FUNCTION__);
 		}
 	}

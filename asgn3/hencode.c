@@ -5,8 +5,8 @@
 
 
 int main(int argc, char **argv){
-	FILE *infile = NULL;
-	FILE *outfile = NULL;
+	int infile = -1;
+	int outfile = -1;
 	int countVal = 0;
 	int *count = &countVal;
 
@@ -15,12 +15,12 @@ int main(int argc, char **argv){
 
 	initTable();
 	if (argc < 3){
-		outfile = stdout;
+		outfile = 1;
 
-	} else if (NULL == (outfile = fopen(argv[2], "w"))){
+	} else if (-1 == (outfile = open(argv[2], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
 		perror(argv[2]);
 	}
-	if (NULL == (infile = fopen(argv[1], "r"))){
+	if (-1 == (infile = open(argv[1], O_RDONLY))){
 		perror(argv[1]);
 		exit(-1);
 
@@ -51,8 +51,8 @@ int main(int argc, char **argv){
 	// 		}
 	// 	}
 
-	fclose(infile);
-	fclose(outfile);
+	close(infile);
+	close(outfile);
 	//FreeTable(table, 127);
 }
 
@@ -63,17 +63,26 @@ void initTable(void){
 	}
 }
 
-
-void fillTable(FILE *infile){
-   int temp = getc(infile);
-	while (temp != EOF){
-		if (temp < 0 || temp > 255){
-			temp = getc(infile);
-			continue;
+void fillTable(int infile){
+   char *temp = NULL;
+   int chRead;
+   int c;
+   if( NULL==(temp=malloc(1000 * sizeof(char))) ) { 
+	   	perror(__FUNCTION__);
+	   	exit(-1);
 		}
-		table[temp] += 1;
-		temp = getc(infile);
+
+	while ( (chRead = read(infile, temp, 1000))  > 0){
+		for (int i = 0; i < chRead; ++i){
+			c = temp[i];
+			if (c < 0 || c > 255){
+			continue;
+			}
+			table[c] += 1;
+		}
+		chRead = read(infile, temp, 1000);
 	}
+	free(temp);
 }
 
 treeNode **buildList(treeNode **list, int *count){
@@ -162,7 +171,6 @@ PathCode  **encodeTable(treeNode *list){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			
 			printf("0x%02x: %s\n", i, codeTable[i]->path);
 		} 
 	}
@@ -191,26 +199,29 @@ char *getPath(treeNode *node, char character, char *path, int index){
 	return NULL;
 }
 
-void writeHeader(FILE *outfile, FILE *infile, int *count){
+void writeHeader(int outfile, int infile, int *count){
 
-	fseek(infile, 0, SEEK_SET);
+	// lseek(infile, 0, SEEK_SET);
+	if (0 > (lseek(infile, 0, SEEK_SET))){
+		perror(__FUNCTION__);
+	}
 
-	if (0 == (fwrite(count, 4, 1, outfile))){
+	if (0 == (write(outfile, count, 4))){
 		perror(__FUNCTION__);
 	}
 	for (int i = 0; i < 256; ++i){
 		if (table[i] > 0){
-			if (0 == (fwrite(&i, 1, 1, outfile))){
+			if (0 == (write(outfile, &i, 1))){
 			perror(__FUNCTION__);
 			}
-			if (0 == (fwrite((table + i), 4, 1, outfile))){
+			if (0 == (write(outfile, (table + i), 4))){
 			perror(__FUNCTION__);
 			}
 		}
 	}
 }
 
-void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable){
+void writeBits(int outfile, int infile, PathCode **codeTable){
 	int buffSize = 40;
 	int bits = 0;
 	int totalBits = 0;
@@ -218,46 +229,57 @@ void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable){
 	int tempByte; 
 	int byteCount = 0;
 
+	char *tempCharBuf = NULL;
+   int chRead;
+   int temp;
+
 	if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
-	int temp = getc(infile);
-	while (temp != EOF){
-		if (temp < 0 || temp > 255){
-			temp = getc(infile);
+
+   if( NULL==(tempCharBuf=malloc(1000 * sizeof(char))) ) { 
+	   	perror(__FUNCTION__);
+	   	exit(-1);
+		}
+	// read(infile, temp, 1000);
+	while ( (chRead = read(infile, tempCharBuf, 1000))  > 0){
+		for (int i = 0; i < chRead; ++i){
+			temp = tempCharBuf[i];
+			if (temp < 0 || temp > 255){
 			continue;
-		}
-		if (bits + codeTable[temp]->len > buffSize){
-			buffSize *= 2;
-			if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
-			   perror(__FUNCTION__);
-			   exit(-1);
 			}
-		}
-		strncpy((bitBuffer+bits), codeTable[temp]->path, codeTable[temp]->len);
-		bits += codeTable[temp]->len;
-		if ((bits % 8) == 0){
-			bitBuffer[bits] = '\0';
-			// printf("buffer: %s\n", bitBuffer);
-			// printf("bits: %d\n", bits);
-			byteCount = bits / 8;
-			// printf("byteCount: %d\n", byteCount);
-			for (int i = 0; i < byteCount; ++i){
-				tempByte = calcBinInt((bitBuffer + (i * 8)));
-				// printf("tempByte: %d\n", tempByte);
-				if (0 == (fwrite(&tempByte, 1, 1, outfile))){
-					perror(__FUNCTION__);
+
+			if (bits + codeTable[temp]->len > buffSize){
+				buffSize *= 2;
+				if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
+				   perror(__FUNCTION__);
+				   exit(-1);
 				}
 			}
-			totalBits += bits;
-			bits = 0;
+			strncpy((bitBuffer+bits), codeTable[temp]->path, codeTable[temp]->len);
+			bits += codeTable[temp]->len;
+			if ((bits % 8) == 0){
+				bitBuffer[bits] = '\0';
+				// printf("buffer: %s\n", bitBuffer);
+				// printf("bits: %d\n", bits);
+				byteCount = bits / 8;
+				// printf("byteCount: %d\n", byteCount);
+				for (int i = 0; i < byteCount; ++i){
+					tempByte = calcBinInt((bitBuffer + (i * 8)));
+					// printf("tempByte: %d\n", tempByte);
+					if (0 == (write(outfile, &tempByte, 1))){
+						perror(__FUNCTION__);
+					}
+				}
+				totalBits += bits;
+				bits = 0;
+			}
 		}
 
-		temp = getc(infile);
+		chRead = read(infile, tempCharBuf, 1000);	
 	}
 
-	// printf("%d\n", bits);
 	if (bits % 8){
 		int pad = 8 - bits;
 		for (int j = 0; j < pad; ++j){
@@ -267,16 +289,18 @@ void writeBits(FILE *outfile, FILE *infile, PathCode **codeTable){
 		// printf("%s\n", bitBuffer);
 		tempByte = calcBinInt(bitBuffer);
 		// printf("tempByte: %d\n", tempByte);
-		if (0 == (fwrite(&tempByte, 1, 1, outfile))){
+		if (0 == (write(outfile, &tempByte, 1))){
 			perror(__FUNCTION__);
 		}
 	}
+	free(tempCharBuf);
 	free(bitBuffer);
+
 }
 
 int calcBinInt(char *byte){
 	int result = 0;
-	for (int i = 7, j = 0; j < 8; --i, ++j){
+	for (int i = 8, j = 0; j < 8; --i, ++j){
 		if (byte[j] == '1'){
 			// printf("hi\n");
 			result += pow(2, i);
@@ -299,31 +323,6 @@ void freeTree(treeNode *node){
 	}
 }
 
-// void FreeTree(treeNode *node){
-// 	while((node)->left != NULL && (node)->right != NULL){
-// 		freeTree(node);
-// 	}
-// 	free(node);
-// }
-
-// int freeTree(treeNode *node){
-// 	int p = 0;
-// 	if (node->left == NULL && node->right == NULL){
-// 		free(node);
-// 		return 1;
-// 	}
-// 	if (node->left != NULL){
-// 		p = freeTree(node->left);
-// 		if (p == 1){
-// 			return p;
-// 		}
-// 	}	
-
-// 	if (node->right != NULL) {
-// 		p = freeTree(node->right);
-// 	}
-// 	return 0;
-// }
 
 void freeTable(PathCode **codeTable){
 	for (int i = 0; i < 256; ++i){
@@ -383,3 +382,56 @@ int compFunction2(const void *a, const void *b){
 
 
 // aaaabbbbccddiiLLk
+
+
+// 	int temp = getc(infile);
+// 	while (temp != EOF){
+// 		if (temp < 0 || temp > 255){
+// 			temp = getc(infile);
+// 			continue;
+// 		}
+// 		if (bits + codeTable[temp]->len > buffSize){
+// 			buffSize *= 2;
+// 			if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
+// 			   perror(__FUNCTION__);
+// 			   exit(-1);
+// 			}
+// 		}
+// 		strncpy((bitBuffer+bits), codeTable[temp]->path, codeTable[temp]->len);
+// 		bits += codeTable[temp]->len;
+// 		if ((bits % 8) == 0){
+// 			bitBuffer[bits] = '\0';
+// 			// printf("buffer: %s\n", bitBuffer);
+// 			// printf("bits: %d\n", bits);
+// 			byteCount = bits / 8;
+// 			// printf("byteCount: %d\n", byteCount);
+// 			for (int i = 0; i < byteCount; ++i){
+// 				tempByte = calcBinInt((bitBuffer + (i * 8)));
+// 				// printf("tempByte: %d\n", tempByte);
+// 				if (0 == (write(outfile, &tempByte, 1))){
+// 					perror(__FUNCTION__);
+// 				}
+// 			}
+// 			totalBits += bits;
+// 			bits = 0;
+// 		}
+
+// 		temp = getc(infile);
+// 	}
+
+// 	// printf("%d\n", bits);
+// 	if (bits % 8){
+// 		int pad = 8 - bits;
+// 		for (int j = 0; j < pad; ++j){
+// 			bitBuffer[bits+j] = '0';
+// 		}
+// 		bitBuffer[bits + pad] = '\0';
+// 		// printf("%s\n", bitBuffer);
+// 		tempByte = calcBinInt(bitBuffer);
+// 		// printf("tempByte: %d\n", tempByte);
+// 		if (0 == (write(outfile, &tempByte, 1))){
+// 			perror(__FUNCTION__);
+// 		}
+// 	}
+// 	free(bitBuffer);
+// }
