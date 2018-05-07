@@ -71,8 +71,8 @@ void fillTable(int infile){
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 		}
-
-	while ( (chRead = read(infile, temp, 1000))  > 0){
+	chRead = read(infile, temp, 1000);
+	while ( (chRead) > 0){
 		for (int i = 0; i < chRead; ++i){
 			c = temp[i];
 			if (c < 0 || c > 255){
@@ -243,7 +243,8 @@ void writeBits(int outfile, int infile, PathCode **codeTable){
 	   	exit(-1);
 		}
 	// read(infile, temp, 1000);
-	while ( (chRead = read(infile, tempCharBuf, 1000))  > 0){
+	chRead = read(infile, tempCharBuf, 1000);
+	while ( (chRead) > 0){
 		for (int i = 0; i < chRead; ++i){
 			temp = tempCharBuf[i];
 			if (temp < 0 || temp > 255){
