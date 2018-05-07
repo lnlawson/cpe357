@@ -43,7 +43,7 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits);
 void binIntToCode(uint8_t intCode, char *byteCode);
 
 void initTable(void);
-treeNode **buildList(treeNode **list, int *count);
+treeNode **buildList(treeNode **list);
 treeNode **buildTree(treeNode **list, int *count);
 void encodeTable(treeNode *list, int *totalbits);
 char *getPath(treeNode *node, char character, char *path, int index);

@@ -45,7 +45,8 @@ int main(int argc, char **argv){
 	printf("hi\n");
 	initTable();
 	readHeader(infile, count);
-	treeList = buildList(treeList, count);
+	printf("%d\n", *count);
+	treeList = buildList(treeList);
 	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 	treeList = buildTree(treeList, count);
 	encodeTable(treeList[0], &totalBits);
@@ -213,8 +214,8 @@ void binIntToCode(uint8_t intCode, char *byteCode){
 
 // -------------------------------------------------------------------------
 
-treeNode **buildList(treeNode **list, int *count){
-	// int count = 0;
+treeNode **buildList(treeNode **list){
+	int count = 0;
 	int buffSize = 40;
 	treeNode **treeList = list;
 	treeNode *tempNode = NULL;
@@ -228,13 +229,13 @@ treeNode **buildList(treeNode **list, int *count){
 	   		perror(__FUNCTION__);
 	   		exit(-1);
 			}
-			treeList[*count] = tempNode;
-			treeList[*count]->character = (char)i;
-			treeList[*count]->val = table[i];
-			treeList[*count]->left = NULL;
-			treeList[*count]->right = NULL;
-			*count += 1;
-			if ((*count) == buffSize){
+			treeList[count] = tempNode;
+			treeList[count]->character = (char)i;
+			treeList[count]->val = table[i];
+			treeList[count]->left = NULL;
+			treeList[count]->right = NULL;
+			count += 1;
+			if ((count) == buffSize){
 				buffSize *=2;
 				if( NULL==(treeList=realloc(treeList, buffSize * sizeof(treeNode*))) ) { 
 	   		perror(__FUNCTION__);
@@ -243,7 +244,7 @@ treeNode **buildList(treeNode **list, int *count){
 			}
 		}
 	}
-	if( NULL==(treeList=realloc(treeList, *count * sizeof(treeNode*))) ) { 
+	if( NULL==(treeList=realloc(treeList, count * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
 	   exit(-1);
 	}
