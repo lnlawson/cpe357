@@ -11,7 +11,7 @@ int main(int argc, char **argv){
 	int totalBits = 0;
 
 	treeNode **treeList = NULL;
-	// PathCode **codeTable = NULL;
+	PathCode **codeTable = NULL;
 
 	if (argc != 3 ){
 		if (argc > 3){
@@ -42,15 +42,17 @@ int main(int argc, char **argv){
 			perror(argv[1]);
 		}
 	}
-	printf("hi\n");
+	// printf("hi\n");
 	initTable();
 	readHeader(infile, count);
-	printf("%d\n", *count);
+	// printf("%d\n", *count);
 	treeList = buildList(treeList);
 	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 	treeList = buildTree(treeList, count);
-	encodeTable(treeList[0], &totalBits);
+	codeTable = encodeTable(treeList[0], &totalBits);
 	decode(infile, outfile, treeList[0], &totalBits);
+	free(treeList);
+	freeTable(codeTable);
 
 
 	// for (int i = 0; i < 256; i++){
@@ -136,10 +138,22 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 	}	
 
 	while ( (readBytesCount = read(infile, readBitsBuff, 1000))  > 0){
+		// printf("%d\n", readBytesCount);
 		for (int i = 0, j = 0; i < readBytesCount; ++i, ++j){
 
 			binIntToCode(readBitsBuff[i], byteCode);
+			// printf("%s\n", byteCode);
+
 			if ((bitCount + 8) > 1000 || ((bitCount + 8) / 8) == readBytesCount){
+				if (((bitCount + 8) / 8) == readBytesCount){
+					strncpy((codeBuff + bitCount), byteCode, 8);
+					bitCount += 8;
+				}
+				// printf("hi\n");
+				// printf("%d\n", bitCount);
+				// printf("%s\n", codeBuff);
+				// printf("%d\n", *totalbits);
+
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
 						if (0 == (write(outfile, decodedChars, 1000))){
@@ -148,6 +162,7 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 						decodedCharsCount = 0;
 					}
 					if ((total + k + 1) == *totalbits){
+						// printf("writing\n");
 						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 						perror(__FUNCTION__);
 						}
@@ -158,15 +173,18 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 					}
 					
 					if (codeBuff[k] == '0'){
-						curNode = tree->left;
+						// printf("0\n");
+						curNode = curNode->left;
 						// total +=1;
 
 					} else if (codeBuff[k] == '1'){
-						curNode = tree->right;
+						// printf("1\n");
+						curNode = curNode->right;
 						// total +=1;
 					}
 
 					if (curNode->left == NULL && curNode->right == NULL){
+						// printf("leaf\n");
 						decodedChars[decodedCharsCount] = curNode->character;
 						decodedCharsCount++;
 						curNode = tree;
@@ -290,7 +308,7 @@ treeNode **buildTree(treeNode **list, int *count){
 	return treeList;
 }
 
-void encodeTable(treeNode *list, int *totalbits){
+PathCode  **encodeTable(treeNode *list, int *totalbits){
 	PathCode **codeTable = calloc( 256, sizeof(PathCode*));
 	char *tempCode = NULL;
 	tempCode = malloc(256 * sizeof(char));
@@ -300,12 +318,12 @@ void encodeTable(treeNode *list, int *totalbits){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			printf("0x%02x: %s\n", i, codeTable[i]->path);
+			// printf("0x%02x: %s\n", i, codeTable[i]->path);
 			*totalbits += (table[i] * codeTable[i]->len);
 		} 
 	}
 	free(tempCode);
-	return; // codeTable;
+	return codeTable;
 }
 
 
@@ -327,6 +345,29 @@ char *getPath(treeNode *node, char character, char *path, int index){
 			return getPath(node->right, character, path, index + 1);
 	}
 	return NULL;
+}
+
+void freeTree(treeNode *node){
+	if (node != NULL){
+		if(node->left == NULL && node->right == NULL){
+			free(node);
+
+		} else {
+			freeTree(node->left);
+			freeTree(node->right);
+			free(node);
+		}
+	}
+}
+
+
+void freeTable(PathCode **codeTable){
+	for (int i = 0; i < 256; ++i){
+		if (codeTable[i]!= NULL){
+			free(codeTable[i]);
+		}
+	}
+	free(codeTable);
 }
 
 int compFunction1(const void *a, const void *b){

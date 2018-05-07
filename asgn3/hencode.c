@@ -300,7 +300,7 @@ void writeBits(int outfile, int infile, PathCode **codeTable){
 
 int calcBinInt(char *byte){
 	int result = 0;
-	for (int i = 8, j = 0; j < 8; --i, ++j){
+	for (int i = 7, j = 0; j < 8; --i, ++j){
 		if (byte[j] == '1'){
 			// printf("hi\n");
 			result += pow(2, i);

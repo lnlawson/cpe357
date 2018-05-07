@@ -45,9 +45,11 @@ void binIntToCode(uint8_t intCode, char *byteCode);
 void initTable(void);
 treeNode **buildList(treeNode **list);
 treeNode **buildTree(treeNode **list, int *count);
-void encodeTable(treeNode *list, int *totalbits);
+PathCode  **encodeTable(treeNode *list, int *totalbits);
 char *getPath(treeNode *node, char character, char *path, int index);
 
+void freeTree(treeNode *node);
+void freeTable(PathCode **codeTable);
 
 int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);
