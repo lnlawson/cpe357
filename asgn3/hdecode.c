@@ -74,11 +74,11 @@ void readHeader(int infile, int *count){
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 	}	
-	if( NULL==(character=malloc(sizeof(uint32_t))) ) { 
+	if( NULL==(character=malloc(sizeof(uint8_t))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 	}
-	if( NULL==(freq=malloc(sizeof(uint8_t))) ) { 
+	if( NULL==(freq=malloc(sizeof(uint32_t))) ) { 
    	perror(__FUNCTION__);
    	exit(-1);
 	}	
