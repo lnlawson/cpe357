@@ -34,6 +34,9 @@ int main(int argc, char **argv){
 		treeList = buildTree(treeList, count);
 		codeTable = encodeTable(treeList[0]);
 		writeHeader(outfile, infile, count);
+		if (*count == 0){
+			return;
+		}
 		writeBits(outfile, infile, codeTable);
 		freeTree(treeList[0]);
 		free(treeList);
