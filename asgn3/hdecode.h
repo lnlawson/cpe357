@@ -45,7 +45,7 @@ void binIntToCode(uint8_t intCode, char *byteCode);
 void initTable(void);
 treeNode **buildList(treeNode **list, int *count);
 treeNode **buildTree(treeNode **list, int *count);
-PathCode **encodeTable(treeNode *list, int *totalbits);
+void encodeTable(treeNode *list, int *totalbits);
 char *getPath(treeNode *node, char character, char *path, int index);
 
 

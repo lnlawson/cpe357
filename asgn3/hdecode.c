@@ -11,7 +11,7 @@ int main(int argc, char **argv){
 	int totalBits = 0;
 
 	treeNode **treeList = NULL;
-	PathCode **codeTable = NULL;
+	// PathCode **codeTable = NULL;
 
 	if (argc != 3 ){
 		if (argc > 3){
@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 	treeList = buildList(treeList, count);
 	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 	treeList = buildTree(treeList, count);
-	codeTable = encodeTable(treeList[0], &totalBits);
+	encodeTable(treeList[0], &totalBits);
 	decode(infile, outfile, treeList[0], &totalBits);
 
 
@@ -289,7 +289,7 @@ treeNode **buildTree(treeNode **list, int *count){
 	return treeList;
 }
 
-PathCode  **encodeTable(treeNode *list, int *totalbits){
+void encodeTable(treeNode *list, int *totalbits){
 	PathCode **codeTable = calloc( 256, sizeof(PathCode*));
 	char *tempCode = NULL;
 	tempCode = malloc(256 * sizeof(char));
@@ -304,7 +304,7 @@ PathCode  **encodeTable(treeNode *list, int *totalbits){
 		} 
 	}
 	free(tempCode);
-	return codeTable;
+	return; // codeTable;
 }
 
 
