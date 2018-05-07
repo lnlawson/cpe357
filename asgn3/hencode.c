@@ -66,7 +66,7 @@ void initTable(void){
 void fillTable(int infile){
    char *temp = NULL;
    unsigned int chRead;
-   int c;
+   unsigned int c;
    if( NULL==(temp=malloc(1000 * sizeof(char))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
