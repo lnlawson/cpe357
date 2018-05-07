@@ -66,7 +66,7 @@ void initTable(void){
 void fillTable(int infile){
    char *temp = NULL;
    unsigned int chRead;
-   unsigned int c;
+   uint8_t c;
    if( NULL==(temp=malloc(1000 * sizeof(char))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
@@ -231,7 +231,7 @@ void writeBits(int outfile, int infile, PathCode **codeTable){
 
 	char *tempCharBuf = NULL;
   	unsigned int chRead;
-   unsigned int temp;
+   uint8_t temp;
 
 	if( NULL==(bitBuffer=realloc(bitBuffer, buffSize * sizeof(treeNode*))) ) { 
 	   perror(__FUNCTION__);
