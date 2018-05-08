@@ -55,9 +55,11 @@ int main(int argc, char **argv){
 				break;
 			}
 		}
-		if (0 == (write(outfile, &oneChar, oneCharFreq))){
-			perror(__FUNCTION__);
+		for (int j = 0; j < oneCharFreq; ++j){
+			if (0 == (write(outfile, &oneChar, 1))){
+				perror(__FUNCTION__);
 			}
+		}
 		close(infile);
 		close(outfile);
 		return 0;
