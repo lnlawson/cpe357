@@ -51,8 +51,8 @@ int main(int argc, char **argv){
 		}
 	}
 	printf("%d\n", *count);
-	// treeList = buildList(treeList);
-	// qsort(treeList, *count, sizeof(treeNode*), compFunction1);
+	treeList = buildList(treeList);
+	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
 	// treeList = buildTree(treeList, count);
 	// codeTable = encodeTable(treeList[0], &totalBits);
 	// decode(infile, outfile, treeList[0], &totalBits);
