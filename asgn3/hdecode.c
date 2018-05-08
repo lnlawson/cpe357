@@ -123,14 +123,14 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	char *byteCode = NULL;
 	int total = 0;
 	int totalBits;
-
+	printf("totalbits: %d\n", *totalbits);
 	if (*totalbits % 8){
 		totalBits = *totalbits + (8 - (*totalbits % 8));
 	}	else {
 		totalBits = *totalbits;
 	}
 	
-	// printf("totalBits: %d\n", totalBits);
+	printf("totalBits: %d\n", totalBits);
 
 	if( NULL==(byteCode=malloc(8 * sizeof(char))) ) { 
 		perror(__FUNCTION__);
