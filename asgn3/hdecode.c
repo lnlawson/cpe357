@@ -199,7 +199,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 						decodedCharsCount++;
 						curNode = tree;
 					}
-					
+
 					if ((total + k + 1) == totalBits){
 						// printf("writing\n");
 						// decodedChars[decodedCharsCount] = '\0';
@@ -226,7 +226,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	}
 
 	if (decodedCharsCount > 0){
-		// printf("writing at end\n");
+		printf("writing at end\n");
 		if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 			perror(__FUNCTION__);
 			}
