@@ -45,6 +45,23 @@ int main(int argc, char **argv){
 	// printf("hi\n");
 	initTable();
 	readHeader(infile, count);
+	if (*count == 1){
+		char oneChar;
+		int oneCharFreq;
+		for (int i = 0; i < 256; ++i){
+			if (table[i] > 0){
+				oneChar = i;
+				oneCharFreq = table[i];
+				break;
+			}
+		}
+		if (0 == (write(outfile, &oneChar, oneCharFreq))){
+			perror(__FUNCTION__);
+			}
+		close(infile);
+		close(outfile);
+		return 0;
+	}
 	// for (int i = 0; i < 256; i++){
 	// 	if (table[i] > 0){
 	// 		printf("table[%d] : occur %d character %c\n", i, table[i], i);
@@ -62,7 +79,8 @@ int main(int argc, char **argv){
 
 	close(infile);
 	close(outfile);
-	
+
+	return 0;
 }
 
 void initTable(void){
@@ -226,7 +244,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	}
 
 	if (decodedCharsCount > 0){
-		printf("writing at end\n");
+		// printf("writing at end\n");
 		if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 			perror(__FUNCTION__);
 			}

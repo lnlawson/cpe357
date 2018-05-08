@@ -29,6 +29,8 @@ int main(int argc, char **argv){
 		treeList = buildList(treeList, count);
 		if (*count == 0){
 			writeHeader(outfile, infile, count);
+			close(infile);
+			close(outfile);
 			return 0;
 		}
 		qsort(treeList, *count, sizeof(treeNode*), compFunction1);
