@@ -56,6 +56,7 @@ int main(int argc, char **argv){
 	treeList = buildTree(treeList, count);
 	codeTable = encodeTable(treeList[0], &totalBits);
 	decode(infile, outfile, treeList[0], &totalBits);
+	freeTree(treeList[0]);
 	free(treeList);
 	freeTable(codeTable);
 
