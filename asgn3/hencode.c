@@ -69,10 +69,10 @@ void initTable(void){
 }
 
 void fillTable(int infile){
-   char *temp = NULL;
-   unsigned int chRead;
+   uint8_t *temp = NULL;
+   int chRead;
    uint8_t c;
-   if( NULL==(temp=malloc(1000 * sizeof(char))) ) { 
+   if( NULL==(temp=malloc(1000 * sizeof(uint8_t))) ) { 
 	   	perror(__FUNCTION__);
 	   	exit(-1);
 		}
@@ -80,12 +80,14 @@ void fillTable(int infile){
 	while ( (chRead) > 0){
 		for (int i = 0; i < chRead; ++i){
 			c = temp[i];
-			if (c < 0 || c > 255){
-			continue;
-			}
+			// printf("%d\n", c);
+			// if (c < 0 || c > 255){
+			// continue;
+			// }
 			table[c] += 1;
 		}
 		chRead = read(infile, temp, 1000);
+		// printf("%d\n", chRead);
 	}
 	free(temp);
 }
@@ -180,7 +182,7 @@ PathCode  **encodeTable(treeNode *list){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			// printf("0x%02x: %s\n", i, codeTable[i]->path);
+			printf("0x%02x: %s\n", i, codeTable[i]->path);
 		} 
 	}
 	free(tempCode);

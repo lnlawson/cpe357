@@ -45,22 +45,23 @@ int main(int argc, char **argv){
 	// printf("hi\n");
 	initTable();
 	readHeader(infile, count);
-	// printf("%d\n", *count);
-	treeList = buildList(treeList);
-	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
-	treeList = buildTree(treeList, count);
-	codeTable = encodeTable(treeList[0], &totalBits);
-	decode(infile, outfile, treeList[0], &totalBits);
-	free(treeList);
-	freeTable(codeTable);
+	for (int i = 0; i < 256; i++){
+		if (table[i] > 0){
+			printf("table[%d] : occur %d character %c\n", i, table[i], i);
+		}
+	}
+	printf("%d\n", *count);
+	// treeList = buildList(treeList);
+	// qsort(treeList, *count, sizeof(treeNode*), compFunction1);
+	// treeList = buildTree(treeList, count);
+	// codeTable = encodeTable(treeList[0], &totalBits);
+	// decode(infile, outfile, treeList[0], &totalBits);
+	// free(treeList);
+	// freeTable(codeTable);
 
-	close(infile);
-	close(outfile);
-	// for (int i = 0; i < 256; i++){
-	// 	if (table[i] > 0){
-	// 		printf("table[%d] : occur %d character %c\n", i, table[i], i);
-	// 	}
-	// }
+	// close(infile);
+	// close(outfile);
+	
 }
 
 void initTable(void){
@@ -91,6 +92,7 @@ void readHeader(int infile, int *count){
 		perror(__FUNCTION__);
 	}
 	*count = *occur;
+	// printf("%d\n", *count);
 
 	for (int i = 0; i < *count; ++i){
 
@@ -109,7 +111,7 @@ void readHeader(int infile, int *count){
 	free(occur);
 }
 
-void decode(int infile, int outfile,treeNode *tree, int *totalbits){
+void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	uint8_t *readBitsBuff = NULL;
 	int readBytesCount = 0;
 	int bitCount = 0;
@@ -119,6 +121,15 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 	treeNode *curNode = tree;
 	char *byteCode = NULL;
 	int total = 0;
+	int totalBits;
+
+	if (*totalbits % 8){
+		totalBits = *totalbits + (8 - (*totalbits % 8));
+	}	else {
+		totalBits = *totalbits;
+	}
+	
+	printf("totalBits: %d\n", totalBits);
 
 	if( NULL==(byteCode=malloc(8 * sizeof(char))) ) { 
 		perror(__FUNCTION__);
@@ -137,23 +148,29 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
    		perror(__FUNCTION__);
    		exit(-1);
 	}	
+	readBytesCount = read(infile, readBitsBuff, 1000);
 
-	while ( (readBytesCount = read(infile, readBitsBuff, 1000))  > 0){
-		// printf("%d\n", readBytesCount);
+	while ( (readBytesCount)  > 0){
+		printf("%d\n", readBytesCount);
 		for (int i = 0, j = 0; i < readBytesCount; ++i, ++j){
 
 			binIntToCode(readBitsBuff[i], byteCode);
-			// printf("%s\n", byteCode);
+			printf("byteCode %d: %s\n", i+1,byteCode);
+			printf("bitCount: %d\n", bitCount);
+			printf("%d\n", total);
 
-			if ((bitCount + 8) > 1000 || ((bitCount + 8) / 8) == readBytesCount){
-				if (((bitCount + 8) / 8) == readBytesCount){
+			if ((bitCount + 8) > 1000 || ((total + bitCount + 8) / 8) == readBytesCount){
+				// printf("IM DOING IT\n");
+				if (((total + bitCount + 8) / 8) == readBytesCount){
+					printf("IM DOING IT\n");
 					strncpy((codeBuff + bitCount), byteCode, 8);
 					bitCount += 8;
 				}
-				// printf("hi\n");
-				// printf("%d\n", bitCount);
-				// printf("%s\n", codeBuff);
-				// printf("%d\n", *totalbits);
+				printf("hi\n");
+				printf("%d\n", bitCount);
+				printf("%s\n", codeBuff);
+				printf("totalbits: %d\n", *totalbits);
+				printf("totalBits: %d\n", totalBits);
 
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
@@ -162,31 +179,32 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 						}
 						decodedCharsCount = 0;
 					}
-					if ((total + k) == *totalbits){
-						// printf("writing\n");
-						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
-						perror(__FUNCTION__);
-						}
-						free(decodedChars);
-						free(readBitsBuff);
-						free(codeBuff);
-						return;
-					}
+					// printf("total %d\n", total + k);
+					// if ((total + k) == totalBits){
+					// 	printf("writing\n");
+					// 	if (0 == (write(outfile, decodedChars, decodedCharsCount))){
+					// 	perror(__FUNCTION__);
+					// 	}
+					// 	free(decodedChars);
+					// 	free(readBitsBuff);
+					// 	free(codeBuff);
+					// 	return;
+					// }
 					
 					if (codeBuff[k] == '0'){
-						// printf("0\n");
+						printf("0\n");
 						curNode = curNode->left;
 						// total +=1;
 
 					} else if (codeBuff[k] == '1'){
-						// printf("1\n");
+						printf("1\n");
 						curNode = curNode->right;
 						// total +=1;
 					}
 
 					if (curNode->left == NULL && curNode->right == NULL){
-						// printf("leaf\n");
 						decodedChars[decodedCharsCount] = curNode->character;
+						printf("leaf: %c\n", decodedChars[decodedCharsCount]);
 						decodedCharsCount++;
 						curNode = tree;
 					}
@@ -199,10 +217,12 @@ void decode(int infile, int outfile,treeNode *tree, int *totalbits){
 			bitCount += 8;
 
 		}
-
+		readBytesCount = read(infile, readBitsBuff, 1000);
+		printf("reading %d\n", readBytesCount);
 	}
 
 	if (decodedCharsCount > 0){
+		printf("writing at end\n");
 		if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 			perror(__FUNCTION__);
 			}
@@ -225,7 +245,6 @@ void binIntToCode(uint8_t intCode, char *byteCode){
 			codeNum -= pow(2, i);
 		}
 	}
-	return;
 }
 
 
@@ -319,7 +338,7 @@ PathCode  **encodeTable(treeNode *list, int *totalbits){
 			tempCode = getPath(list, i, tempCode, 0);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			// printf("0x%02x: %s\n", i, codeTable[i]->path);
+			printf("0x%02x: %s\n", i, codeTable[i]->path);
 			*totalbits += (table[i] * codeTable[i]->len);
 		} 
 	}
