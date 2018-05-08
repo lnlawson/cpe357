@@ -183,12 +183,15 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 					// printf("total %d\n", total + k);
 					if ((total + k) == totalBits){
 						// printf("writing\n");
+						decodedChars[decodedCharsCount+1] = '\0';
+						printf("%s\n", decodedChars);
 						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 						perror(__FUNCTION__);
 						}
 						free(decodedChars);
 						free(readBitsBuff);
 						free(codeBuff);
+						free(byteCode);
 						return;
 					}
 					
@@ -232,6 +235,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	free(decodedChars);
 	free(readBitsBuff);
 	free(codeBuff);
+	free(byteCode);
 }
 
 void binIntToCode(uint8_t intCode, char *byteCode){
