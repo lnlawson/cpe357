@@ -1,0 +1,48 @@
+Hencode Functions:
+
+	void writeHeader(int outfile, int infile, int *count);
+		-Writes the Bytes for the header of the encoded file.
+
+	void writeBits(int outfile, int infile, PathCode **codeTable);
+		-Writes the encoded character codes to the outfile.
+
+	int calcBinInt(char *byte);
+		-Creates a Binary integer value of the 8bit codes for writeBits to write the value to the file.
+
+Hdecode Functions:
+
+	void readHeader(int infile, int *count);
+		-Reads the binary header of the encoded file to begin the process of decoding.
+
+	void decode(int infile, int outfile,treeNode *tree, int *totalbits);
+		-This is the heart of decode. It reads the bytes and rewrites the decoded characters to the outfile.
+
+	void binIntToCode(uint8_t intCode, char *byteCode);
+		-Aids decode() in the conversion of the binary int to a code string again.
+
+
+Shared Functions:
+
+	void initTable(void);
+		-Builds the frequency array and fills the indexs with 0s to start.
+
+	void fillTable(int file);
+		-Reads the file character by character and fills in the frequency array.
+
+	treeNode **buildList(treeNode **list, int *count);
+		-Builds and sorts a list of treeNodes.
+
+	treeNode **buildTree(treeNode **list, int *count);
+		-Takes the list of nodes and builds the huffman tree from it.
+
+	PathCode **encodeTable(treeNode *list);
+		-Searches the tree for each character occurance and fills in a table that carries the path code in a string and the len of the code.
+
+	char *getPath(treeNode *node, char character, char *path, int index);
+		-Recursive function for searching the tree for encodeTable().
+
+	void freeTree(treeNode *node);
+		-Recursive function for freeing the tree nodes.
+
+	void freeTable(PathCode **codeTable);
+		-Frees the code table structs and all the code path string mallocs.
