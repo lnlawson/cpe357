@@ -129,7 +129,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 		totalBits = *totalbits;
 	}
 	
-	printf("totalBits: %d\n", totalBits);
+	// printf("totalBits: %d\n", totalBits);
 
 	if( NULL==(byteCode=malloc(8 * sizeof(char))) ) { 
 		perror(__FUNCTION__);
@@ -151,26 +151,26 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	readBytesCount = read(infile, readBitsBuff, 1000);
 
 	while ( (readBytesCount)  > 0){
-		printf("%d\n", readBytesCount);
+		// printf("%d\n", readBytesCount);
 		for (int i = 0, j = 0; i < readBytesCount; ++i, ++j){
 
 			binIntToCode(readBitsBuff[i], byteCode);
-			printf("byteCode %d: %s\n", i+1,byteCode);
-			printf("bitCount: %d\n", bitCount);
-			printf("%d\n", total);
+			// printf("byteCode %d: %s\n", i+1,byteCode);
+			// printf("bitCount: %d\n", bitCount);
+			// printf("%d\n", total);
 
 			if ((bitCount + 8) > 1000 || ((total + bitCount + 8) / 8) == readBytesCount){
 				// printf("IM DOING IT\n");
 				if (((total + bitCount + 8) / 8) == readBytesCount){
-					printf("IM DOING IT\n");
+					// printf("IM DOING IT\n");
 					strncpy((codeBuff + bitCount), byteCode, 8);
 					bitCount += 8;
 				}
-				printf("hi\n");
-				printf("%d\n", bitCount);
-				printf("%s\n", codeBuff);
-				printf("totalbits: %d\n", *totalbits);
-				printf("totalBits: %d\n", totalBits);
+				// printf("hi\n");
+				// printf("%d\n", bitCount);
+				// printf("%s\n", codeBuff);
+				// printf("totalbits: %d\n", *totalbits);
+				// printf("totalBits: %d\n", totalBits);
 
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
@@ -192,19 +192,19 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 					// }
 					
 					if (codeBuff[k] == '0'){
-						printf("0\n");
+						// printf("0\n");
 						curNode = curNode->left;
 						// total +=1;
 
 					} else if (codeBuff[k] == '1'){
-						printf("1\n");
+						// printf("1\n");
 						curNode = curNode->right;
 						// total +=1;
 					}
 
 					if (curNode->left == NULL && curNode->right == NULL){
 						decodedChars[decodedCharsCount] = curNode->character;
-						printf("leaf: %c\n", decodedChars[decodedCharsCount]);
+						// printf("leaf: %c\n", decodedChars[decodedCharsCount]);
 						decodedCharsCount++;
 						curNode = tree;
 					}
@@ -218,11 +218,11 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 
 		}
 		readBytesCount = read(infile, readBitsBuff, 1000);
-		printf("reading %d\n", readBytesCount);
+		// printf("reading %d\n", readBytesCount);
 	}
 
 	if (decodedCharsCount > 0){
-		printf("writing at end\n");
+		// printf("writing at end\n");
 		if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 			perror(__FUNCTION__);
 			}
