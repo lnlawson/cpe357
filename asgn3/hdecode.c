@@ -201,7 +201,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 					}
 
 					if ((total + k + 1) == totalBits){
-						printf("writing\n");
+						// printf("writing\n");
 						// decodedChars[decodedCharsCount] = '\0';
 						// printf("%s\n", decodedChars);
 						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
