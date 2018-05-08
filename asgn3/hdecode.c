@@ -171,7 +171,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 				// printf("%d\n", bitCount);
 				// printf("%s\n", codeBuff);
 				// printf("totalbits: %d\n", *totalbits);
-				printf("totalBits: %d\n", totalBits);
+				// printf("totalBits: %d\n", totalBits);
 
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
@@ -180,7 +180,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 						}
 						decodedCharsCount = 0;
 					}
-					printf("total %d\n", total + k);
+					// printf("total %d\n", total + k);
 		
 					if (codeBuff[k] == '0'){
 						// printf("0\n");
