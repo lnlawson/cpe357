@@ -45,22 +45,22 @@ int main(int argc, char **argv){
 	// printf("hi\n");
 	initTable();
 	readHeader(infile, count);
-	for (int i = 0; i < 256; i++){
-		if (table[i] > 0){
-			printf("table[%d] : occur %d character %c\n", i, table[i], i);
-		}
-	}
-	printf("%d\n", *count);
+	// for (int i = 0; i < 256; i++){
+	// 	if (table[i] > 0){
+	// 		printf("table[%d] : occur %d character %c\n", i, table[i], i);
+	// 	}
+	// }
+	// printf("%d\n", *count);
 	treeList = buildList(treeList);
 	qsort(treeList, *count, sizeof(treeNode*), compFunction1);
-	// treeList = buildTree(treeList, count);
-	// codeTable = encodeTable(treeList[0], &totalBits);
-	// decode(infile, outfile, treeList[0], &totalBits);
-	// free(treeList);
-	// freeTable(codeTable);
+	treeList = buildTree(treeList, count);
+	codeTable = encodeTable(treeList[0], &totalBits);
+	decode(infile, outfile, treeList[0], &totalBits);
+	free(treeList);
+	freeTable(codeTable);
 
-	// close(infile);
-	// close(outfile);
+	close(infile);
+	close(outfile);
 	
 }
 
