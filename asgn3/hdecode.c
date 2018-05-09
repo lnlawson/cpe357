@@ -4,8 +4,8 @@
 #include "hdecode.h"
 
 int main(int argc, char **argv){
-	int infile = 0;
-	int outfile = 0;
+	int infile = -1;
+	int outfile = -1;
 	int countVal = 0;
 	int *count = &countVal;
 	int totalBits = 0;
@@ -23,13 +23,13 @@ int main(int argc, char **argv){
 				if (argv[1][1] == '-'){
 					infile = 0;
 					outfile = 1;
+				} else {
+					infile = 0;
+					if (-1 == (outfile = open(argv[1], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
+						perror(argv[2]);
+					}
 				}
-			} else {
-				infile = 0;
-				if (-1 == (outfile = open(argv[1], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
-					perror(argv[2]);
-				}
-			}
+			} 
 		} else {
 			infile = 0;
 			outfile = 1;
@@ -151,14 +151,9 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	char *byteCode = NULL;
 	int total = 0;
 	int totalBits;
-	// printf("totalbits: %d\n", *totalbits);
-	// if (*totalbits % 8){
-	// 	totalBits = *totalbits + (8 - (*totalbits % 8));
-	// }	else {
-		totalBits = *totalbits;
-	// }
-	
-	// printf("totalBits: %d\n", totalBits);
+
+	totalBits = *totalbits;
+
 
 	if( NULL==(byteCode=malloc(8 * sizeof(char))) ) { 
 		perror(__FUNCTION__);
@@ -190,13 +185,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 					strncpy((codeBuff + bitCount), byteCode, 8);
 					bitCount += 8;
 				}
-				// if ( 1 == (cyclingBuffs(bitCount, decodeCount, outfile, decodedChars, codeBuff, curNode, tree, total, totalBits))){
-				// 	free(decodedChars);
-				// 	free(readBitsBuff);
-				// 	free(codeBuff);
-				// 	free(byteCode);
-				// 	return;
-				// }
+
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
 						if (0 == (write(outfile, decodedChars, 1000))){
@@ -288,17 +277,6 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 // 	}
 // 	return 0;
 // }
-
-
-
-
-
-
-
-
-
-
-
 
 
 void binIntToCode(uint8_t intCode, char *byteCode){
