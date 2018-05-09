@@ -124,7 +124,7 @@ int readHeader(int infile){
 	countVal = *occur;
 	// printf("%d\n", *count);
 
-	for (int i = 0; i < *count; ++i){
+	for (int i = 0; i < *countVal; ++i){
 
 		if (-1 == read(infile, character, 1) ){
 			perror(__FUNCTION__);
@@ -140,7 +140,7 @@ int readHeader(int infile){
 	free(freq);
 	free(occur);
 
-	return (int)*countVal;
+	return (int)countVal;
 }
 
 void decode(int infile, int outfile, treeNode *tree, int *totalbits){
