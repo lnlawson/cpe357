@@ -390,7 +390,7 @@ PathCode  **encodeTable(treeNode *list, int *totalbits){
 			// printf("%d\n", i);
 			// printf("%s\n", tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			strncpy(codeTable[i]->path, tempCode, codeTable->len);
+			strncpy(codeTable[i]->path, tempCode, codeTable[i]->len);
 
 			// printf("0x%02x: %s\n", i, codeTable[i]->path);
 			*totalbits += (table[i] * codeTable[i]->len);
