@@ -29,10 +29,10 @@ int main(int argc, char **argv){
 						perror(argv[2]);
 					}
 				}
+			} else {
+				infile = 0;
+				outfile = 1;
 			} 
-		} else {
-			infile = 0;
-			outfile = 1;
 		} 
 	} else {
 		if (argv[1][1] == '-'){
