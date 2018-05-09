@@ -387,6 +387,7 @@ PathCode  **encodeTable(treeNode *list, int *totalbits){
 		if (table[i] > 0){
 			codeTable[i] = malloc(sizeof(PathCode));
 			tempCode = getPath(list, i, tempCode, 0);
+			printf("%d\n", i);
 			strcpy(codeTable[i]->path, tempCode);
 			codeTable[i]->len = strlen(codeTable[i]->path);
 			// printf("0x%02x: %s\n", i, codeTable[i]->path);
