@@ -4,8 +4,8 @@
 #include "hdecode.h"
 
 int main(int argc, char **argv){
-	int infile = -1;
-	int outfile = -1;
+	int infile;
+	int outfile;
 	int countVal = 0;
 	int *count = &countVal;
 	int totalBits = 0;
