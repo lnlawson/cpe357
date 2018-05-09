@@ -121,7 +121,7 @@ int readHeader(int infile){
 	if (-1 == read(infile, occur, 4) ){
 		perror(__FUNCTION__);
 	}
-	countVal = *occur;
+	countVal = (int)*occur;
 	printf("%d\n", countVal);
 
 	for (int i = 0; i < countVal; ++i){
