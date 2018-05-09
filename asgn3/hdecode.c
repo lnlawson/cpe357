@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 	}
 	// printf("hi\n");
 	initTable();
-	readHeader(infile, count);
+	*count = readHeader(infile, count);
 	if (*count == 1){
 		char oneChar;
 		int oneCharFreq;
@@ -99,9 +99,8 @@ void initTable(void){
 	}
 }
 
-void readHeader(int infile, int *count){
-	uint32_t CountNum = 0;
-	uint32_t *occur = &CountNum;
+int readHeader(int infile, int *count){
+	uint32_t *occur = 0;
 	uint8_t *character = NULL;
 	uint32_t *freq = NULL;
 
@@ -139,6 +138,8 @@ void readHeader(int infile, int *count){
 	free(character);
 	free(freq);
 	free(occur);
+
+	return (int)*occur;
 }
 
 void decode(int infile, int outfile, treeNode *tree, int *totalbits){
