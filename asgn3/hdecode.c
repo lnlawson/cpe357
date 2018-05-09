@@ -24,13 +24,13 @@ int main(int argc, char **argv){
 					infile = 0;
 					outfile = 1;
 				} else {
-					infile = 0;
-					if (-1 == (outfile = open(argv[1], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
+					outfile = 0;
+					if (-1 == (infile = open(argv[1], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
 						perror(argv[2]);
 					}
 				}
 			} else {
-				printf("hi\n");
+				// printf("hi\n");
 				infile = 0;
 				outfile = 1;
 			} 
