@@ -4,8 +4,8 @@
 #include "hdecode.h"
 
 int main(int argc, char **argv){
-	int infile;
-	int outfile;
+	int infile = -1;
+	int outfile = -1;
 	int countVal = 0;
 	int *count = &countVal;
 	int totalBits = 0;
@@ -35,11 +35,18 @@ int main(int argc, char **argv){
 			outfile = 1;
 		} 
 	} else {
-		if (-1 == (outfile = open(argv[2], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
+		if (argv[1][1] == '-'){
+			infile = 0;
+			if (-1 == (outfile = open(argv[2], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
 			perror(argv[2]);
-		}
-		if (-1 == (infile = open(argv[1], O_RDONLY))){
-			perror(argv[1]);
+			}
+		} else{
+			if (-1 == (outfile = open(argv[2], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
+				perror(argv[2]);
+			}
+			if (-1 == (infile = open(argv[1], O_RDONLY))){
+				perror(argv[1]);
+			}
 		}
 	}
 	// printf("hi\n");
