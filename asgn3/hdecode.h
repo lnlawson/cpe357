@@ -29,7 +29,7 @@ typedef struct item{
 
 typedef struct path
 {
-	char path[256];
+	char path[400];
 	unsigned int len;
 }PathCode;
 
