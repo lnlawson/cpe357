@@ -26,7 +26,7 @@ int main(int argc, char **argv){
 				}
 			} else {
 				infile = 0;
-				if (-1 == (outfile = open(argv[2], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
+				if (-1 == (outfile = open(argv[1], O_RDWR | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR | S_IXUSR))){
 					perror(argv[2]);
 				}
 			}
