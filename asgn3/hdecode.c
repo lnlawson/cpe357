@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 	}
 	// printf("hi\n");
 	initTable();
-	*count = readHeader(infile, count);
+	*count = readHeader(infile);
 	if (*count == 1){
 		char oneChar;
 		int oneCharFreq;
@@ -124,7 +124,7 @@ int readHeader(int infile){
 	countVal = *occur;
 	// printf("%d\n", *count);
 
-	for (int i = 0; i < *countVal; ++i){
+	for (int i = 0; i < countVal; ++i){
 
 		if (-1 == read(infile, character, 1) ){
 			perror(__FUNCTION__);
