@@ -100,7 +100,7 @@ void initTable(void){
 }
 
 void readHeader(int infile, int *count){
-	int CountNum = 0;
+	uint32_t CountNum = 0;
 	uint32_t *occur = &CountNum;
 	uint8_t *character = NULL;
 	uint32_t *freq = NULL;
