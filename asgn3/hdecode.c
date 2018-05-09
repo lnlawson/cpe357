@@ -382,6 +382,7 @@ treeNode **buildTree(treeNode **list, uint32_t *count){
 PathCode  **encodeTable(treeNode *list, int *totalbits){
 	PathCode **codeTable = calloc( 256, sizeof(PathCode*));
 	char *tempCode = NULL;
+	int templen;
 	tempCode = malloc(256 * sizeof(char));
 	for (int i = 0; i < 256; ++i){
 		if (table[i] > 0){
@@ -389,9 +390,9 @@ PathCode  **encodeTable(treeNode *list, int *totalbits){
 			tempCode = getPath(list, i, tempCode, 0);
 			// printf("%d\n", i);
 			// printf("%s\n", tempCode);
+			templen = strlen(tempCode);
+			strncpy(codeTable[i]->path, tempCode, templen);
 			codeTable[i]->len = strlen(codeTable[i]->path);
-			strncpy(codeTable[i]->path, tempCode, codeTable[i]->len);
-
 			// printf("0x%02x: %s\n", i, codeTable[i]->path);
 			*totalbits += (table[i] * codeTable[i]->len);
 		} 
