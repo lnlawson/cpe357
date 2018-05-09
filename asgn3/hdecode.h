@@ -15,32 +15,31 @@
 typedef struct tree treeNode;
 
 struct tree{
-	char character;
-	int val;
+	unsigned char character;
+	unsigned int val;
 	treeNode *right;
 	treeNode *left;
-	int huffVal;
 };
 
 
 typedef struct item{
-	int val;
-	int occur;
+	unsigned int val;
+	unsigned int occur;
 }Item;
 
 typedef struct path
 {
 	char path[256];
-	int len;
+	unsigned int len;
 }PathCode;
 
 
 // Functions:
-int readHeader(int infile);
+unsigned int readHeader(unsigned int infile);
 
-void decode(int infile, int outfile,treeNode *tree, int *totalbits);
+void decode(unsigned int infile, unsigned int outfile, treeNode *tree, int *totalbits);
 
-// int cyclingBuffs(int bitCount, int *decodedCharsCount, int outfile, char *decodedChars, char *codeBuff, treeNode *curNode, 
+// unsigned int cyclingBuffs(int bitCount, int *decodedCharsCount, int outfile, char *decodedChars, char *codeBuff, treeNode *curNode, 
 // 		treeNode *tree, int total, int totalBits);
 
 void binIntToCode(uint8_t intCode, char *byteCode);
@@ -58,4 +57,4 @@ int compFunction1(const void *a, const void *b);
 int compFunction2(const void *a, const void *b);
 
 
-int table[256];
+unsigned int table[256];

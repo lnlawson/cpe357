@@ -4,8 +4,8 @@
 #include "hdecode.h"
 
 int main(int argc, char **argv){
-	int infile = -1;
-	int outfile = -1;
+	unsigned int infile = -1;
+	unsigned int outfile = -1;
 	uint32_t countVal = 0;
 	uint32_t *count = &countVal;
 	int totalBits = 0;
@@ -53,9 +53,9 @@ int main(int argc, char **argv){
 	// printf("hi\n");
 	initTable();
 	*count = readHeader(infile);
-	printf("%d\n", *count);
+	// printf("%d\n", *count);
 	if (*count == 1){
-		char oneChar;
+		unsigned char oneChar;
 		int oneCharFreq;
 		for (int i = 0; i < 256; ++i){
 			if (table[i] > 0){
@@ -100,7 +100,7 @@ void initTable(void){
 	}
 }
 
-int readHeader(int infile){
+unsigned int readHeader(unsigned int infile){
 	uint32_t countVal = 0;
 	uint32_t *occur = NULL;
 	uint8_t *character = NULL;
@@ -141,21 +141,21 @@ int readHeader(int infile){
 	free(freq);
 	free(occur);
 
-	return (int)countVal;
+	return (unsigned int) countVal;
 }
 
-void decode(int infile, int outfile, treeNode *tree, int *totalbits){
+void decode(unsigned int infile, unsigned int outfile, treeNode *tree, int *totalbits){
 	uint8_t *readBitsBuff = NULL;
-	int readBytesCount = 0;
-	int bitCount = 0;
+	unsigned int readBytesCount = 0;
+	unsigned int bitCount = 0;
 	char *codeBuff = NULL;
-	char *decodedChars = NULL;
-	int decodedCharsCount = 0;
-	int *decodeCount = &decodedCharsCount;
+	unsigned char *decodedChars = NULL;
+	unsigned int decodedCharsCount = 0;
+	unsigned int *decodeCount = &decodedCharsCount;
 	treeNode *curNode = tree;
 	char *byteCode = NULL;
-	int total = 0;
-	int totalBits;
+	unsigned int total = 0;
+	unsigned int totalBits;
 
 	totalBits = *totalbits;
 
@@ -227,7 +227,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 				total += bitCount;
 				bitCount = 0;
 			}
-			strncpy((codeBuff + bitCount), byteCode, 8);
+			strncpy((codeBuff + (int)bitCount), byteCode, 8);
 			bitCount += 8;
 
 		}
@@ -286,7 +286,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 
 void binIntToCode(uint8_t intCode, char *byteCode){
 
-	int codeNum = intCode;
+	unsigned int codeNum = intCode;
 	
 	for (int i = 7, j = 0; j < 8; --i, j++){
 		if ((codeNum - pow(2, i)) < 0){
