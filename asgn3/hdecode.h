@@ -36,7 +36,7 @@ typedef struct path
 
 
 // Functions:
-void readHeader(int infile, int *count);
+int readHeader(int infile, int *count);
 
 void decode(int infile, int outfile,treeNode *tree, int *totalbits);
 
