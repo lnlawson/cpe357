@@ -53,6 +53,7 @@ int main(int argc, char **argv){
 	// printf("hi\n");
 	initTable();
 	*count = readHeader(infile);
+	printf("%d\n", *count);
 	if (*count == 1){
 		char oneChar;
 		int oneCharFreq;
