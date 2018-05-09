@@ -99,8 +99,9 @@ void initTable(void){
 	}
 }
 
-int readHeader(int infile, int *count){
-	uint32_t *occur = 0;
+int readHeader(int infile){
+	uint32_t countVal = 0;
+	uint32_t *occur = &countVal;
 	uint8_t *character = NULL;
 	uint32_t *freq = NULL;
 
@@ -120,7 +121,7 @@ int readHeader(int infile, int *count){
 	if (-1 == read(infile, occur, 4) ){
 		perror(__FUNCTION__);
 	}
-	*count = *occur;
+	countVal = *occur;
 	// printf("%d\n", *count);
 
 	for (int i = 0; i < *count; ++i){
@@ -139,7 +140,7 @@ int readHeader(int infile, int *count){
 	free(freq);
 	free(occur);
 
-	return (int)*occur;
+	return (int)*countVal;
 }
 
 void decode(int infile, int outfile, treeNode *tree, int *totalbits){
