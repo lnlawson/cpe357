@@ -101,7 +101,7 @@ void initTable(void){
 
 int readHeader(int infile){
 	uint32_t countVal = 0;
-	uint32_t *occur = NULL;
+	uint32_t occur = 0;
 	uint8_t *character = NULL;
 	uint32_t *freq = NULL;
 
@@ -118,10 +118,10 @@ int readHeader(int infile){
    	exit(-1);
 	}	
 
-	if (-1 == read(infile, occur, 4) ){
+	if (-1 == read(infile, &occur, 4) ){
 		perror(__FUNCTION__);
 	}
-	countVal = *occur;
+	countVal = occur;
 	printf("%d\n", countVal);
 
 	for (int i = 0; i < countVal; ++i){
