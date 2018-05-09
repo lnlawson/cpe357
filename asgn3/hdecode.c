@@ -6,8 +6,8 @@
 int main(int argc, char **argv){
 	int infile = -1;
 	int outfile = -1;
-	int countVal = 0;
-	int *count = &countVal;
+	uint32_t countVal = 0;
+	uint32_t *count = &countVal;
 	int totalBits = 0;
 
 	treeNode **treeList = NULL;
@@ -121,8 +121,8 @@ int readHeader(int infile){
 	if (-1 == read(infile, occur, 4) ){
 		perror(__FUNCTION__);
 	}
-	countVal = (int)*occur;
-	printf("%d\n", countVal);
+	countVal = *occur;
+	// printf("%d\n", countVal);
 
 	for (int i = 0; i < countVal; ++i){
 
