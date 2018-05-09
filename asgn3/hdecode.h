@@ -40,6 +40,9 @@ void readHeader(int infile, int *count);
 
 void decode(int infile, int outfile,treeNode *tree, int *totalbits);
 
+// int cyclingBuffs(int bitCount, int *decodedCharsCount, int outfile, char *decodedChars, char *codeBuff, treeNode *curNode, 
+// 		treeNode *tree, int total, int totalBits);
+
 void binIntToCode(uint8_t intCode, char *byteCode);
 
 void initTable(void);

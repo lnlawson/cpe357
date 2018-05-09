@@ -4,8 +4,8 @@
 #include "hdecode.h"
 
 int main(int argc, char **argv){
-	int infile = -1;
-	int outfile = -1;
+	int infile = 0;
+	int outfile = 0;
 	int countVal = 0;
 	int *count = &countVal;
 	int totalBits = 0;
@@ -146,6 +146,7 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	char *codeBuff = NULL;
 	char *decodedChars = NULL;
 	int decodedCharsCount = 0;
+	int *decodeCount = &decodedCharsCount;
 	treeNode *curNode = tree;
 	char *byteCode = NULL;
 	int total = 0;
@@ -179,27 +180,23 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	readBytesCount = read(infile, readBitsBuff, 1000);
 
 	while ( (readBytesCount)  > 0){
-		// printf("%d\n", readBytesCount);
 		for (int i = 0, j = 0; i < readBytesCount; ++i, ++j){
 
 			binIntToCode(readBitsBuff[i], byteCode);
-			// printf("byteCode %d: %s\n", i+1,byteCode);
-			// printf("bitCount: %d\n", bitCount);
-			// printf("%d\n", total);
 
 			if ((bitCount + 8) > 1000 || ((total + bitCount + 8) / 8) == readBytesCount){
-				// printf("IM DOING IT\n");
+
 				if (((total + bitCount + 8) / 8) == readBytesCount){
-					// printf("IM DOING IT\n");
 					strncpy((codeBuff + bitCount), byteCode, 8);
 					bitCount += 8;
 				}
-				// printf("hi\n");
-				// printf("%d\n", bitCount);
-				// printf("%s\n", codeBuff);
-				// printf("totalbits: %d\n", *totalbits);
-				// printf("totalBits: %d\n", totalBits);
-
+				// if ( 1 == (cyclingBuffs(bitCount, decodeCount, outfile, decodedChars, codeBuff, curNode, tree, total, totalBits))){
+				// 	free(decodedChars);
+				// 	free(readBitsBuff);
+				// 	free(codeBuff);
+				// 	free(byteCode);
+				// 	return;
+				// }
 				for (int k = 0; k < bitCount; ++k){
 					if (decodedCharsCount == 1000){
 						if (0 == (write(outfile, decodedChars, 1000))){
@@ -207,30 +204,22 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 						}
 						decodedCharsCount = 0;
 					}
-					// printf("total %d\n", total + k);
 		
 					if (codeBuff[k] == '0'){
-						// printf("0\n");
 						curNode = curNode->left;
-						// total +=1;
 
 					} else if (codeBuff[k] == '1'){
-						// printf("1\n");
 						curNode = curNode->right;
-						// total +=1;
 					}
 
 					if (curNode->left == NULL && curNode->right == NULL){
 						decodedChars[decodedCharsCount] = curNode->character;
-						// printf("leaf: %c\n", decodedChars[decodedCharsCount]);
 						decodedCharsCount++;
 						curNode = tree;
 					}
 
 					if ((total + k + 1) == totalBits){
-						// printf("writing\n");
-						// decodedChars[decodedCharsCount] = '\0';
-						// printf("%s\n", decodedChars);
+
 						if (0 == (write(outfile, decodedChars, decodedCharsCount))){
 						perror(__FUNCTION__);
 						}
@@ -249,12 +238,11 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 
 		}
 		readBytesCount = read(infile, readBitsBuff, 1000);
-		// printf("reading %d\n", readBytesCount);
 	}
 
-	if (decodedCharsCount > 0){
-		// printf("writing at end\n");
-		if (0 == (write(outfile, decodedChars, decodedCharsCount))){
+	if (*decodeCount > 0){
+
+		if (0 == (write(outfile, decodedChars, *decodeCount))){
 			perror(__FUNCTION__);
 			}
 	}
@@ -264,6 +252,54 @@ void decode(int infile, int outfile, treeNode *tree, int *totalbits){
 	free(codeBuff);
 	free(byteCode);
 }
+
+
+// int cyclingBuffs(int bitCount, int *decodedCharsCount, int outfile, char *decodedChars, char *codeBuff, treeNode *curNode, 
+// 		treeNode *tree, int total, int totalBits){
+
+// 	for (int k = 0; k < bitCount; ++k){
+// 		if (*decodedCharsCount == 1000){
+// 			if (0 == (write(outfile, decodedChars, 1000))){
+// 				perror(__FUNCTION__);
+// 			}
+// 			*decodedCharsCount = 0;
+// 		}
+
+// 		if (codeBuff[k] == '0'){
+// 			curNode = curNode->left;
+
+// 		} else if (codeBuff[k] == '1'){
+// 			curNode = curNode->right;
+// 		}
+
+// 		if (curNode->left == NULL && curNode->right == NULL){
+// 			decodedChars[*decodedCharsCount] = curNode->character;
+// 			*decodedCharsCount++;
+// 			curNode = tree;
+// 		}
+
+// 		if ((total + k + 1) == totalBits){
+
+// 			if (0 == (write(outfile, decodedChars, *decodedCharsCount))){
+// 				perror(__FUNCTION__);
+// 			}
+// 			return 1;
+// 		}
+// 	}
+// 	return 0;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 void binIntToCode(uint8_t intCode, char *byteCode){
 
