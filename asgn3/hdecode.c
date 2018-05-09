@@ -339,9 +339,9 @@ treeNode **buildList(treeNode **list){
 	return treeList;
 }
 
-treeNode **buildTree(treeNode **list, int *count){
+treeNode **buildTree(treeNode **list, uint32_t *count){
 	treeNode **treeList = list;
-	int tempCount = *count;
+	uint32_t tempCount = *count;
 	// printf("%d\n", tempCount);
 	treeNode *tempNode = NULL;
 	treeNode *tempA = NULL;
