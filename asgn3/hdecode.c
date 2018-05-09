@@ -30,6 +30,7 @@ int main(int argc, char **argv){
 					}
 				}
 			} else {
+				printf("hi\n");
 				infile = 0;
 				outfile = 1;
 			} 
