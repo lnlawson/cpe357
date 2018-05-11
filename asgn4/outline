@@ -1,0 +1,39 @@
+LOGAN LAWSON and ANGELO DE LAURENTIS
+
+For our implementation of mytar we’ll be using seperate .c files to story our “create Archive” and “Extract Archive” functionality
+
+createAchive.c
+
+	procDir()
+		This function will process a directory and put a list of pointers to all the files in the directory and it’s subdirectories into an array.
+	
+	procFile()
+		This function will build a giant buffer the length of the file to store all the data from the file in.
+	
+	BuildHeader()
+		This function will collect information from procFile(), mystat() and mypwd() to build the header to an archive entry	
+	
+	ArchiveFile()
+		This funcion gathers the the header information from BuildHeader() and the array carrying the data given by procFile() appends them and archives them 	
+
+mystat.c
+
+	mystat()
+		This function will populate the stat structure with all the information from a file to be used in procFile() to determine the size of the buffer  and will be used by buildHeader() to determine much of the information for the header.
+
+mypwd.c 
+
+	mypwd()
+		This function traverses the directories below a given file to return a string that represents the path to that file. Used in buildHeader() to determine the name a prefix for a given file.
+
+
+extractArchive.c
+
+	readHeader()
+		This function breaks down the header based upon the header format to prepare to read the file
+
+	readData()
+		This function reads the body of the file based upon header info into an array
+
+	outputFiles()
+		This function takes the arrays built by readData() writes them to files
