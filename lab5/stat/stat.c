@@ -89,7 +89,7 @@ char *getAccess(mode_t mode, char *access) {
 void printStats(char *fname) {
    struct stat *stats  = malloc(sizeof(struct stat));
    char *access = malloc(sizeof(char) * 10);
-   strcpy(access, "-rwxrwxrwx");
+   strncpy(access, "-rwxrwxrwx", 10);
    stat(fname, stats);
    printf("File: '%s'\n", fname);
    printf("Type: %s\n", getType(stats->st_mode));
