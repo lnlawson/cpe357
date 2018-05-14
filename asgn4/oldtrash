@@ -1,0 +1,50 @@
+
+
+/*void procDir(const char *dirname){
+   DIR *dir = NULL;
+
+   struct dirent *de;
+   struct stat *input_s = malloc(1000); 
+   if (NULL == (dir = opendir(dirname))){
+      perror(dirname);
+      exit(-1);
+   }
+   while ((de = readdir(dir)) != NULL){
+
+      if (strcmp(de->d_name, ".") == 0){
+         printf("%s\n", dirname);
+         de = readdir(dir);
+      }
+      if (strcmp(de->d_name, "..") == 0){
+         //printf("%s\n", dirname);
+         de = readdir(dir);
+      }
+
+      //printf("dirname : %s\n", pathCat(dirname, de->d_name));
+      if (stat(de->d_name, input_s)){
+         printf("failing... %s\n", de->d_name);
+         perror("Usage");
+         exit(-1);
+      }
+      //stat(de->d_name, &input_s);
+      if (S_ISDIR(input_s->st_mode)){
+         procDir(de->d_name);
+
+      }
+      input_s = NULL;
+
+
+
+      printf("%s\n", de->d_name);
+   }
+
+
+   
+
+}*/
+
+
+/*char *pathCat(const char *parent, char *child){
+   int lenp = strlen(parent);
+   int lenc = strlen(child);
+   char *final = malloc((lenp + lenc + 2)*sizeof(char));
