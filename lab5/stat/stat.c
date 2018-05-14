@@ -29,17 +29,18 @@ char *getType(mode_t mode) {
 }
 
 char *getAccess(mode_t mode, char *access) {
-   if(mode & IFREG)
+   mode_t typemode = mode & 0170000;
+   if(typemode == IFREG)
       access[0] = '-';
-   if(mode & IFDIR)
+   if(typemode == IFDIR)
       access[0] = 'd';
-   if(mode & IFCHR)
+   if(typemode == IFCHR)
       access[0] = 'c';
-   if(mode & IFBLK)
+   if(typemode == IFBLK)
       access[0] = 'b';
-   if(mode & IFIFO)
+   if(typemode == IFIFO)
       access[0] = 'p';
-   if(mode & IFLNK)
+   if(typemode == IFLNK)
       access[0] = 'l';
 
    if(!(mode & 00400))
@@ -88,8 +89,9 @@ char *getAccess(mode_t mode, char *access) {
 
 void printStats(char *fname) {
    struct stat *stats  = malloc(sizeof(struct stat));
-   char *access = malloc(sizeof(char) * 10);
+   char *access = malloc(sizeof(char) * 11);
    strncpy(access, "-rwxrwxrwx", 10);
+   access[10] = '\0';
    stat(fname, stats);
    printf("File: '%s'\n", fname);
    printf("Type: %s\n", getType(stats->st_mode));
